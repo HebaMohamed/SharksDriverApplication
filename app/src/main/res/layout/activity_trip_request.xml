@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.sharks.gp.sharkspassengerapplication.TripRequestActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:id="@+id/mapimg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/staticmap"/>
+
+    <TextView
+        android:text="About 10 minites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/durationtxt"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:paddingBottom="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/routepin"/>
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:text="Pickup location"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addresstxt"
+                android:textSize="20sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="hoihn iubiub ihiu"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:id="@+id/distancetxt"
+                android:gravity="right"
+                android:text="10Km"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:text="iuhui iuhniun uinuin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:id="@+id/detailstxt" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        custom:indicatorColor="@color/colorAccent"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        custom:indicatorName="BallClipRotatePulseIndicator"/>
+
+    <TextView
+        android:text="60"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="7dp"
+        android:textSize="22sp"
+        android:textColor="@color/colorAccent"
+        android:id="@+id/counttxt" />
+
+    <Button
+        style="?android:textAppearanceSmall"
+        android:background="@drawable/buttonoval"
+        android:id="@+id/acceptbtn"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:text="Accept"
+        android:textColor="#fff"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="7dp"
+        android:textSize="17dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" "/>
+
+</LinearLayout>

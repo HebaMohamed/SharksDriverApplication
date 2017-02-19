@@ -1,0 +1,128 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.sharks.gp.sharkspassengerapplication.ArrivingActivity" >
+
+
+    <fragment
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/linearlayout1"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:padding="7dp"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/usericn"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_gravity="center_vertical"
+            android:text="User name"
+            android:id="@+id/passengernametxt" />
+
+    </LinearLayout>
+
+    <at.markushi.ui.CircleButton
+        android:layout_width="70dip"
+        android:layout_height="70dip"
+        android:src="@drawable/navigation"
+        app:cb_color="@color/colorPrimary"
+        app:cb_pressedRingWidth="10dip"
+        android:id="@+id/navbtn"
+        android:layout_above="@+id/linearlayout1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="-30dp"/>
+
+    <at.markushi.ui.CircleButton
+        android:layout_width="70dip"
+        android:layout_height="70dip"
+        android:src="@drawable/phonecall"
+        app:cb_color="@color/colorAccent"
+        app:cb_pressedRingWidth="10dip"
+        android:id="@+id/callbtn"
+        android:layout_above="@+id/linearlayout1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="-30dp"
+        android:layout_marginEnd="60dp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:id="@+id/linearLayout3">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Arriving"
+            android:padding="7dp"
+            android:id="@+id/addrtxt"
+            android:layout_gravity="center_horizontal"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/linearLayout4"
+        android:layout_below="@+id/linearLayout3"
+        android:padding="5dp"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Pick Up Location"
+            android:layout_gravity="left"
+            android:textSize="12sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Pick Up Address"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/addresstxt" />
+
+    </LinearLayout>
+
+    <Button
+        style="?android:textAppearanceSmall"
+        android:background="@drawable/buttonoval"
+        android:id="@+id/startbtn"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:text="Add Destination"
+        android:textColor="#fff"
+        android:padding="7dp"
+        android:textSize="17dp"
+        android:layout_below="@+id/linearLayout4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
+
+</RelativeLayout>

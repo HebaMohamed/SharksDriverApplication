@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_talk_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.sharks.gp.sharkspassengerapplication.TalkActivity">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/talklv"
+        android:layout_above="@+id/linearlayout"
+        android:layout_below="@+id/languagesspinner"></ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:id="@+id/linearlayout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+        <at.markushi.ui.CircleButton
+            android:layout_width="90dip"
+            android:layout_height="90dip"
+            android:id="@+id/thumbupbtn"
+            android:src="@drawable/thumbup"
+            app:cb_color="@color/colorAccent"
+            app:cb_pressedRingWidth="10dip"
+            android:layout_weight="1"/>
+        <at.markushi.ui.CircleButton
+            android:layout_width="90dip"
+            android:layout_height="90dip"
+            android:id="@+id/thumbdownbtn"
+            android:src="@drawable/thumbdown"
+            app:cb_color="@color/colorAccent"
+            app:cb_pressedRingWidth="10dip"
+            android:layout_weight="1"/>
+        <at.markushi.ui.CircleButton
+            android:id="@+id/micbtn"
+            android:layout_width="90dip"
+            android:layout_height="90dip"
+            android:src="@drawable/mic"
+            app:cb_color="@color/colorAccent"
+            app:cb_pressedRingWidth="10dip"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/languagesspinner"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"></Spinner>
+
+</RelativeLayout>
