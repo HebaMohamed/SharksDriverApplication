@@ -76,7 +76,6 @@ public class TalkActivity extends AppCompatActivity {
                 selectedIndex=languages.size()-1;
             }
         }
-        languagesspinner.setSelection(selectedIndex);//as default
 
         micbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +149,9 @@ public class TalkActivity extends AppCompatActivity {
 
             }
         });
+
+        languagesspinner.setSelection(selectedIndex);//as default
+
 
 
     }

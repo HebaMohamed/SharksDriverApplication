@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        sendTestTrip();//test onlyyy
-        sendMgrInstruction();//test onlyyy
 
         //check if user logged in
         try {
@@ -74,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 if(appState.equals("request")){
                     startActivity(new Intent(MainActivity.this, TripRequestActivity.class));
                 } else if(appState.equals("ready")){
+                    sendTestTrip();//test onlyyy
+                    sendMgrInstruction();//test onlyyy
                     startActivity(new Intent(MainActivity.this, MainMapActivity.class));
                 } else if(appState.equals("accept")){
                     startActivity(new Intent(MainActivity.this, ArrivingActivity.class));

@@ -360,8 +360,8 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
             editor.putString(AppConstants.PROPERTY_APP_STATE, "ready");
             editor.putInt("did", d.id);
             editor.putString("dname", d.name);
-            editor.putString("demail", d.email);
-            editor.putString("dimage", d.image);
+//            editor.putString("demail", d.email);
+//            editor.putString("dimage", d.image);
             editor.apply();
         }
         public static Driver getLoggedDriver() throws Exception {
@@ -369,9 +369,10 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
             Driver d;
             if(did != 0) {//3shn lw mfish wla driver logged
                 String dname = prefs.getString("dname", "");
-                String demail = prefs.getString("demail", "");
-                String dimage = prefs.getString("dimage", "");
-                d = new Driver(did, dname, demail, "", dimage);
+//                String demail = prefs.getString("demail", "");
+//                String dimage = prefs.getString("dimage", "");
+//                d = new Driver(did, dname, demail, "", dimage);
+                d = new Driver(did, dname, "", "", "");
             }
             else
                 d=null;

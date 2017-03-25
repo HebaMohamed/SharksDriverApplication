@@ -51,6 +51,7 @@
             android:background="#85ffffff"
             android:padding="10dp"
             android:hint="Password"
+            android:inputType="textPassword"
             android:id="@+id/driverpasstxt" />
 
         <TextView

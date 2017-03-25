@@ -27,7 +27,7 @@ public class LastTripDetailsActivity extends AppCompatActivity {
     TextView passengername, pickuploctxt, dropoffloctxt, starttxt, endtxt, distancetxt, durationtxt, costtxt, tripratetxt;
 
     String test;
-//    ArrayList<Double> pathwayLats = new ArrayList<>();
+//    ArrayList<Double> pathwayLats = new ArrayList<>();t
 //    ArrayList<Double> pathwayLngs = new ArrayList<>();//lmlk
 
     ArrayList<Location> pathwayLocs = new ArrayList<>();
@@ -61,7 +61,6 @@ public class LastTripDetailsActivity extends AppCompatActivity {
         t1.price=112;
         t1.p.fullName="bla name";
 
-        test = "uihiu";
 //        pathwayLats.add(30.123177);
 //        pathwayLngs.add(31.009540);
 //        pathwayLats.add(30.133177);

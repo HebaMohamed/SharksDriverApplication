@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
     <TextView
-        android:text="20$"
+        android:text="15$"
         android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="oijoij joimni oinion"
+                android:text="sample street"
                 android:gravity="left"
                 android:id="@+id/stxt"/>
             <TextView
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="oijoij joimni oinion"
+                android:text="modern school ahmed essmat street"
                 android:gravity="left"
                 android:id="@+id/dtxt"/>
         </LinearLayout>

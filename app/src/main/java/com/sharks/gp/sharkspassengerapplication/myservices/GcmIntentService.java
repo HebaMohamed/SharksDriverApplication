@@ -92,7 +92,8 @@ public class GcmIntentService extends IntentService {
             intent.putExtra("msgflag", msgFlag);
             sendBroadcast(intent);
             //send notification
-            sendNotification(msg, "Passenger Message!", new TripRequestActivity(),2);
+            if(msgFlag.equals("p"))
+                sendNotification(msg, "Passenger Message!", new TripRequestActivity(),2);
         } catch (Exception e) {
             e.printStackTrace();
         }
