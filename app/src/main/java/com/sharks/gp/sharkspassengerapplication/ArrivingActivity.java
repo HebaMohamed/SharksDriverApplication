@@ -275,6 +275,9 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
 //              destination.setLongitude(31.019540);
                 MyApplication.startTrip(destination,place.getAddress().toString());//testttt send to /accepttrip      //get destination
 //              startService(new Intent(MyApplication.getAppContext(), LocationService.class));//only start when start trip //start service
+
+                sendTripStarted("passenger"+passenger.id,place.getLatLng().latitude,place.getLatLng().longitude);
+
                 startActivity(new Intent(ArrivingActivity.this, InTripActivity.class));
                 finish();
             }
@@ -284,6 +287,18 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+    }
+
+    void sendTripStarted(String channel, double dlat, double dlng){
+
+        JSONObject jso = new JSONObject();
+        try {
+            jso.put("type", "tripstarted");
+            jso.put("destlat", dlat);
+            jso.put("destlng", dlng);
+            MyApplication.sendNotificationToChannel(jso,channel);
+
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
 }

@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +22,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,13 +45,14 @@ import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
 import org.json.JSONObject;
 
 public class MainMapActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private Marker drivermarker;
 
     //testtt
     int driverid;// = 1;
+    Location loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,17 +147,15 @@ public class MainMapActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //show my location
-        Location loc = MyApplication.getLastKnownLocation();
-        LatLng ll = new LatLng(loc.getLatitude(),loc.getLongitude());//for test onlyyy //ay location we hyt8yr lma ysm3
-        drivermarker =  mMap.addMarker(new MarkerOptions()
-                .position(ll)
-                .title("My Location")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallorangeshark)));
 
-        //move to this location
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        buildGoogleApiClient();
+        //show my location
+//        Location loc = MyApplication.getLastKnownLocation();
+        drivermarker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(0,0))
+                        .title("Another Driver Location")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallblueshark)));
+
 
         //listen to all vehicles moves
         try {
@@ -177,7 +185,7 @@ public class MainMapActivity extends AppCompatActivity
 
                             try {
                                 JSONObject obj = (JSONObject) message;
-                                final int id = obj.getInt("id");
+                                final int id = obj.getInt("did");
                                 Double lat = obj.getDouble("lat");
                                 Double lng = obj.getDouble("lng");
                                 final LatLng ll = new LatLng(lat, lng);
@@ -237,4 +245,93 @@ public class MainMapActivity extends AppCompatActivity
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+
+    protected synchronized void buildGoogleApiClient() {
+
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(10 * 1000);
+        mLocationRequest.setFastestInterval(1 * 1000);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle connectionHint) {
+                        if (ActivityCompat.checkSelfPermission(MainMapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainMapActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        //LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,GeoLocMapActivity.this );
+                        loc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                        if (loc != null) {
+//            dLat = loc.getLatitude();
+//            dLong = loc.getLongitude();
+//            //Does this log?
+//            Log.d(getClass().getSimpleName(), String.valueOf(dLat) + ", " + String.valueOf(dLong));
+
+//                            mMap.clear();
+//                            mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title("Assistant Location"));
+//                            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(loc.getLatitude(), loc.getLongitude())));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()),14));
+
+
+
+                        } else {
+                            Toast.makeText(MainMapActivity.this, "no location detected", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                })
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+
+        mMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        if (mGoogleApiClient != null && !mGoogleApiClient.isConnected())
+//            mGoogleApiClient.connect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (mGoogleApiClient != null)
+            if (mGoogleApiClient.isConnected() || mGoogleApiClient.isConnecting()){
+                mGoogleApiClient.disconnect();
+                mGoogleApiClient.connect();
+            } else if (!mGoogleApiClient.isConnected()){
+                mGoogleApiClient.connect();
+            }
+//        Toast.makeText(GeoLocMapActivity.this, "Loc", Toast.LENGTH_SHORT).show();
+
+        LatLng ll = new LatLng(loc.getLatitude(),loc.getLongitude());//for test onlyyy //ay location we hyt8yr lma ysm3
+        drivermarker =  mMap.addMarker(new MarkerOptions()
+                .position(ll)
+                .title("My Location")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallorangeshark)));
+
+        //move to this location
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+    }
+
 }

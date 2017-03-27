@@ -54,7 +54,7 @@ public class GcmIntentService extends IntentService {
                 if(type.equals("triprequest")){
                     String s = MyApplication.getAppState();
                     if(s.equals("ready"))//3shn bbb3t l notifications mn hna 8er kda fl service htcheck eno msh fy ay trip
-                        goTripRequest(Double.valueOf(extras.getString("lat")),Double.valueOf(extras.getString("lng")),extras.getString("details"),Integer.valueOf(extras.getString("tripid")),Long.valueOf(extras.getString("timestamp")));
+                        goTripRequest(Double.valueOf(extras.getString("lat")),Double.valueOf(extras.getString("lng")),extras.getString("details"),Integer.valueOf(extras.getString("tripid")),Long.valueOf(extras.getString("timestamp")),Integer.valueOf(extras.getString("passengerid")));
                 }
                 else if(type.equals("managerinstruction")){
                     goManagerInstruction(extras.getString("mgrmsg"));
@@ -69,11 +69,11 @@ public class GcmIntentService extends IntentService {
     }
 
 
-    public void goTripRequest(double lat, double lng, String details, int tripid, Long timestamp) {
+    public void goTripRequest(double lat, double lng, String details, int tripid, Long timestamp, int passengerid) {
         try {
             sendNotification("Hurry up! and tap for more details", "Trip Request !", new TripRequestActivity(),1);
             //save request for activity use
-            MyApplication.storeRequest(lat, lng, details, tripid, timestamp);
+            MyApplication.storeRequest(lat, lng, details, tripid, timestamp, passengerid );
             //send broad cast to main map
             Intent intent = new Intent(AppConstants.BROADCAST_TRIP_REQUEST_ACTION);
 //            intent.putExtra("msg", msg);

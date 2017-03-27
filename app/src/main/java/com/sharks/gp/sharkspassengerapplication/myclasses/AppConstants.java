@@ -18,7 +18,7 @@ public class AppConstants {
 
 
     public static final String CHANNEL_NOTIFY = "driver1";
-    public static final String CHANNEL_PartnersLocation = "LocsChannel";
+    public static final String CHANNEL_PartnersLocation = "locschannel";//"LocsChannel";
 
 //    public static final String BROADCAST_COUNTER_ACTION = "com.sharks.gp.sharkspassengerapplication.updateprogress";
     public static final String BROADCAST_MSG_ACTION = "com.sharks.gp.sharkspassengerapplication.updatetalk";

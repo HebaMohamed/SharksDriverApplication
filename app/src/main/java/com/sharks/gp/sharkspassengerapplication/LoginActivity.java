@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
 //            }
             @Override
             public String getBodyContentType() {
-                return String.format("application/json; charset=utf-8");
+                return String.format("application/x-www-form-urlencoded; charset=utf-8");
             }
             @Override
             public byte[] getBody() throws AuthFailureError {
@@ -170,8 +170,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-//        sr.setRetryPolicy(new DefaultRetryPolicy( 100000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
+        sr.setRetryPolicy(new DefaultRetryPolicy( 100000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        sr.setRetryPolicy(new DefaultRetryPolicy(0, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // Add the request to the queue
         Volley.newRequestQueue(this).add(sr);
 

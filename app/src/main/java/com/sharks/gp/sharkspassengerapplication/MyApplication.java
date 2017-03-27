@@ -221,6 +221,20 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
             e.printStackTrace();
         }
     }
+    public static void sendNotificationToChannel(JSONObject jso, String channel) {
+        PnGcmMessage gcmMessage = new PnGcmMessage();
+        gcmMessage.setData(jso);
+        PnMessage message = new PnMessage(
+                pubnub,
+                channel,
+                callback,
+                gcmMessage);
+        try {
+            message.publish();
+        } catch (PubnubException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static Callback callback = new Callback() {
         @Override
@@ -250,14 +264,16 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
         return appstate;
     }
 
-    public static void storeRequest(double lat, double lng, String details, int tripid, Long timestamp) throws Exception {
+    public static void storeRequest(double lat, double lng, String details, int tripid, Long timestamp, int passengerid) throws Exception {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(AppConstants.PROPERTY_APP_STATE, "request");
         editor.putString("lat", String.valueOf(lat));
         editor.putString("lng", String.valueOf(lng));
         editor.putString("details", details);
         editor.putString("tripid", String.valueOf(tripid));
+        editor.putString("passengerid", String.valueOf(passengerid));
         editor.putString("timestamp", String.valueOf(timestamp));
+
         editor.apply();
     }
     public static void endRequest() {
@@ -289,12 +305,14 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
         String details = prefs.getString("details", "");
         int tripid = Integer.parseInt(prefs.getString("tripid", "0"));
         Long timestamp = Long.parseLong(prefs.getString("timestamp", "0"));
+        int passengerid = Integer.parseInt(prefs.getString("passengerid","0"));
 
         Trip trip = new Trip(lat, lng, details, tripid, timestamp);
         //id the destination added
         double dlat = Double.parseDouble(prefs.getString("distlat", "0"));
         double dlng = Double.parseDouble(prefs.getString("distlng", "0"));
         trip.setDestination(dlat,dlng);
+        trip.p=new Passenger(passengerid);
         return trip;
     }
     public static void storeTripAcceptance(Passenger p){
@@ -302,25 +320,28 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
         editor.putString(AppConstants.PROPERTY_APP_STATE, "accept");
         editor.putString("pid", String.valueOf(p.id));
         editor.putString("pname", p.fullName);
-        editor.putString("pgender", p.gender);
-        editor.putString("page", String.valueOf(p.age));
+//        editor.putString("pgender", p.gender);
+//        editor.putString("page", String.valueOf(p.age));
         editor.putString("pphone", String.valueOf(p.phone));
-        editor.putString("prelativephone", String.valueOf(p.relative_phones));
-        editor.putString("planguage", p.language);
-        editor.putString("pemail", p.email);
+//        editor.putString("prelativephone", String.valueOf(p.relative_phones));
+//        editor.putString("planguage", p.language);
+//        editor.putString("pemail", p.email);
         editor.apply();
     }
     public static Passenger getTripPassenger() throws Exception {
         int pid = Integer.parseInt(prefs.getString("pid", "0"));
         String pname = prefs.getString("pname", "");
-        String pgender = prefs.getString("pgender", "");
-        int page = Integer.parseInt(prefs.getString("page", "0"));
+//        String pgender = prefs.getString("pgender", "");
+//        int page = Integer.parseInt(prefs.getString("page", "0"));
         int pphone = Integer.parseInt(prefs.getString("pphone", "0"));
-        int prelativephone = Integer.parseInt(prefs.getString("prelativephone", "0"));
-        String planguage = prefs.getString("planguage", "");
-        String pemail = prefs.getString("pemail", "");
+//        int prelativephone = Integer.parseInt(prefs.getString("prelativephone", "0"));
+//        String planguage = prefs.getString("planguage", "");
+//        String pemail = prefs.getString("pemail", "");
 
-        Passenger p = new Passenger(pid,"",pname,pgender,page,pphone,prelativephone,planguage,pemail);
+//        Passenger p = new Passenger(pid,"",pname,pgender,page,pphone,prelativephone,planguage,pemail);
+        Passenger p = new Passenger(pid);
+        p.fullName=pname;
+        p.phone=pphone;
         return p;
     }
 

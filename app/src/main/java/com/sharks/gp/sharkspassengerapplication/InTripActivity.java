@@ -35,9 +35,11 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
+import com.sharks.gp.sharkspassengerapplication.myclasses.Passenger;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Trip;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
     Button endbtn;
     CircleButton chatbtn, navbtn;
     Trip trip;
+    Passenger passenger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,8 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
 
         try {
             trip = MyApplication.getTripRequest();
+            passenger = MyApplication.getTripPassenger();
+
 //            addresstxt.setText(MyApplication.getLocationAddress(trip.destination));
 
 
@@ -215,6 +220,7 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+                sendTripEnded("passenger"+passenger.id);
                 startActivity(new Intent(InTripActivity.this, TripEndActivity.class));
                 finish();
             }
@@ -228,6 +234,15 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         dialog.show();
     }
 
+    void sendTripEnded(String channel){
+
+        JSONObject jso = new JSONObject();
+        try {
+            jso.put("type", "tripended");
+            MyApplication.sendNotificationToChannel(jso,channel);
+
+        } catch (JSONException e) { e.printStackTrace(); }
+    }
 
     void getDirections(double newLat, double newLng){
 

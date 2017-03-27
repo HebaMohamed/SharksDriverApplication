@@ -8,4 +8,10 @@ public class MyURL {
     static String hostname = "https://sharksrest.herokuapp.com/rest/driverservice/";
     public static String login = hostname+"login/";
 
+    public static String getlasttrips = hostname+"getlasttrips/";
+    public static String getlasttrip = hostname+"getlasttrip/";
+
+    public static String accepttrip = hostname+"accepttrip/";
+
+
 }
