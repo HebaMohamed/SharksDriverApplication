@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
+import com.sharks.gp.sharkspassengerapplication.myclasses.Passenger;
 import com.sharks.gp.sharkspassengerapplication.myclasses.TalkMessage;
 
 import org.json.JSONArray;
@@ -53,6 +54,8 @@ public class TalkActivity extends AppCompatActivity {
     ArrayList<String> languagesCodes = new ArrayList<>();
     int selectedIndex;
 
+    Passenger passenger;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +67,13 @@ public class TalkActivity extends AppCompatActivity {
         talklv=(ListView)findViewById(R.id.talklv);
         languagesspinner = (Spinner)findViewById(R.id.languagesspinner);
         MyApplication.removeNotifications(3);
+
+        try {
+            passenger=MyApplication.getTripPassenger();
+        } catch (Exception e) {
+            e.printStackTrace();
+            finish();
+        }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();//3shn l err
         StrictMode.setThreadPolicy(policy);
@@ -204,10 +214,22 @@ public class TalkActivity extends AppCompatActivity {
             jso.put("type", "passengertalk");
             jso.put("msg", msg);
             jso.put("msgflag", "d");
-            MyApplication.sendNotification(jso);
+            MyApplication.sendNotificationToChannel(jso,"passenger"+passenger.id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        //show msg
+        //translate
+        try {
+            String str = callUrlAndParseResult("auto",languagesCodes.get(selectedIndex),msg);
+            msgs.add(new TalkMessage("d",str));
+        } catch (Exception e) {
+            e.printStackTrace();
+            msgs.add(new TalkMessage("d",msg));
+        }
+
+        setadapter(msgs,talklv);
     }
 
 

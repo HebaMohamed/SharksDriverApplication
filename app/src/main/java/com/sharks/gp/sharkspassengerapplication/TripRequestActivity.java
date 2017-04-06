@@ -218,8 +218,8 @@ public class TripRequestActivity extends AppCompatActivity {
         JSONObject jso = new JSONObject();
         try {
             jso.put("type", "requestresponse");
-            jso.put("tripid", 1);
-            jso.put("driverid", 1);
+            jso.put("tripid", trip.trip_ID);
+            jso.put("driverid", MyApplication.getLoggedDriverID());
             MyApplication.sendNotificationToChannel(jso,channel);
 
         } catch (JSONException e) { e.printStackTrace(); }

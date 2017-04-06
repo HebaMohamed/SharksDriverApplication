@@ -93,12 +93,9 @@ public class LastTripsActivity extends AppCompatActivity {
 
                 TextView disttxt = (TextView) view.findViewById(R.id.disttxt);
                 String addr = null;
-                try {
-                    addr = MyApplication.getLocationAddress(a.get(position).destination);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    addr="Unknown Address";
-                }
+
+                addr = a.get(position).pickupAddress; //MyApplication.getLocationAddress(a.get(position).destination);
+
                 TextView starttxt = (TextView) view.findViewById(R.id.starttxt);
                 disttxt.setText(addr);
                 starttxt.setText(a.get(position).getStartdate());
@@ -150,6 +147,7 @@ public class LastTripsActivity extends AppCompatActivity {
                             t1.pickup.setLatitude(pickupobj.getDouble("lat"));
                             t1.pickup.setLongitude(pickupobj.getDouble("lng"));
 
+                            t1.pickupAddress=MyApplication.getLocationAddress(t1.destination);
 
                             trips.add(t1);
 

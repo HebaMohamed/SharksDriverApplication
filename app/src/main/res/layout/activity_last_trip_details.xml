@@ -242,7 +242,6 @@
                 android:text="Trip Rate"
                 android:gravity="left"
                 android:layout_weight="1"
-                android:id="@+id/durationtxt"
                 android:paddingLeft="10dp"
                 android:textSize="14sp" />
 

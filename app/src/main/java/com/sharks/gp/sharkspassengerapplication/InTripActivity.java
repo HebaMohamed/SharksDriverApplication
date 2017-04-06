@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -35,6 +36,7 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
+import com.sharks.gp.sharkspassengerapplication.myclasses.MyURL;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Passenger;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Trip;
 
@@ -57,7 +59,7 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
 
     Marker drivermarker;
     //testtt
-    int driverid = 1;
+    int driverid;// = 1;
 
     TextView addresstxt, disttxt, durationtxt;
     Button endbtn;
@@ -81,6 +83,7 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         chatbtn = (CircleButton)findViewById(R.id.chatbtn);
         navbtn = (CircleButton)findViewById(R.id.navbtn);
 
+        driverid=MyApplication.getLoggedDriverID();
 
         try {
             trip = MyApplication.getTripRequest();
@@ -306,7 +309,6 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         // Add the request to the queue
         Volley.newRequestQueue(MyApplication.getAppContext()).add(sr);
     }
-
 
 
 

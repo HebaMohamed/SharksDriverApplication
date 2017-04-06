@@ -250,12 +250,17 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
 
     //////////////////////////////////////////////////////////////////////////////////loc
     public static String getLocationAddress(Location loc) throws IOException {
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(mycontext, Locale.getDefault());
-        addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-        String approxAddress = addresses.get(0).getAddressLine(0);
-        return approxAddress;
+        try{
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(mycontext, Locale.getDefault());
+            addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            String approxAddress = addresses.get(0).getAddressLine(0);
+            return approxAddress;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return"Unknown Address";
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////app state

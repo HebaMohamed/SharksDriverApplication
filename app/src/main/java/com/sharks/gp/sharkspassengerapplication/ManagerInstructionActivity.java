@@ -30,7 +30,8 @@ public class ManagerInstructionActivity extends AppCompatActivity {
         headtxt=(TextView)findViewById(R.id.headtxt);
         instructions=MyApplication.getMgrsInstructions();
         setadapter(instructions,instlv);
-        headtxt.setText("Last Updated : "+instructions.get(instructions.size()-1).getInstructionDateTimeString());
+        if(instructions.size()!=0)
+            headtxt.setText("Last Updated : "+instructions.get(instructions.size()-1).getInstructionDateTimeString());
         MyApplication.removeNotifications(3);
 
 

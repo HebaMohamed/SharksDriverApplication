@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,13 +45,14 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
+import com.sharks.gp.sharkspassengerapplication.myclasses.LatLngInterpolator;
 
 import org.json.JSONObject;
 
 public class MainMapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, LocationListener {
 
-    private GoogleMap mMap;
+    private static GoogleMap mMap;
     private Marker drivermarker;
 
     //testtt
@@ -144,6 +149,7 @@ public class MainMapActivity extends AppCompatActivity
         return true;
     }
 
+    LatLng ll; int id;
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -185,26 +191,30 @@ public class MainMapActivity extends AppCompatActivity
 
                             try {
                                 JSONObject obj = (JSONObject) message;
-                                final int id = obj.getInt("did");
+                                id = obj.getInt("did");
                                 Double lat = obj.getDouble("lat");
                                 Double lng = obj.getDouble("lng");
-                                final LatLng ll = new LatLng(lat, lng);
+                                ll = new LatLng(lat, lng);
 
                                 runOnUiThread(new Runnable() { // l runnable d 3shn err IllegalStateException 3shn d async
                                     @Override
                                     public void run() {
                                         // Your code to run in GUI thread here
                                         if (id == driverid) {//get location for my vehicle
-                                            drivermarker.setPosition(ll);
-                                            //move to this location
-                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
-                                            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+//                                            drivermarker.setPosition(ll);
+                                            //animation
+                                            animateMarkerToGB(drivermarker,ll);
+//                                            //move to this location
+//                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
+//                                            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLng(ll));
+
                                         }
                                         else {
                                             mMap.addMarker(new MarkerOptions()
                                                     .position(ll)
                                                     .title("Another Driver Location")
-                                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallblueshark)));
+                                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallorangeshark)));
                                         }
                                     }
                                 });
@@ -332,6 +342,42 @@ public class MainMapActivity extends AppCompatActivity
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+    }
+
+    static void animateMarkerToGB(final Marker marker, final LatLng finalPosition) {
+        final LatLng startPosition = marker.getPosition();
+
+        ///
+//        initGMaps(mypos,finalPosition,selectedtransportModeFlag);
+        ///
+        final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.Spherical();
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        final Interpolator interpolator = new AccelerateDecelerateInterpolator();
+        final float durationInMs = 3000;
+
+        handler.post(new Runnable() {
+            long elapsed;
+            float t;
+            float v;
+
+            @Override
+            public void run() {
+                // Calculate progress using interpolator
+                elapsed = SystemClock.uptimeMillis() - start;
+                t = elapsed / durationInMs;
+                v = interpolator.getInterpolation(t);
+
+                marker.setPosition(latLngInterpolator.interpolate(v, startPosition, finalPosition));
+
+                // Repeat till progress is complete.
+                if (t < 1) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                }
+
+            }
+        });
     }
 
 }
