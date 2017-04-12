@@ -16,9 +16,13 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PnGcmMessage;
 import com.pubnub.api.PnMessage;
@@ -31,6 +35,7 @@ import com.sharks.gp.sharkspassengerapplication.myclasses.MgrInstruction;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Passenger;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Trip;
 import com.sharks.gp.sharkspassengerapplication.myservices.LocationService;
+import com.sharks.gp.sharkspassengerapplication.myservices.MyFirebaseInstanceIDService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +59,8 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
     private static String regId;
     private static GoogleCloudMessaging gcm;
 
+    public static Firebase myFirebaseRef;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,9 +69,26 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
         MyApplication.mycontext=getApplicationContext();//
         prefs = PreferenceManager.getDefaultSharedPreferences(this);//("mypref", Context.MODE_PRIVATE);
 
-        pubnub = new Pubnub( AppConstants.PUB_PUBLISH_KEY, AppConstants.PUB_SUBSCRIBE_KEY);
+//        pubnub = new Pubnub( AppConstants.PUB_PUBLISH_KEY, AppConstants.PUB_SUBSCRIBE_KEY);
+//        register();//for gcm services
 
-        register();//for gcm services
+        //for firebase
+        Firebase.setAndroidContext(getApplicationContext());
+        if(myFirebaseRef==null)
+            myFirebaseRef = new Firebase(AppConstants.FIREBASE_DB);
+
+        try {
+            FirebaseApp.getInstance();
+        } catch (IllegalStateException ex) {
+            FirebaseApp.initializeApp(mycontext, FirebaseOptions.fromResource(mycontext));
+        }
+
+
+        String firebasetoken = FirebaseInstanceId.getInstance().getToken();
+        MyFirebaseInstanceIDService.sendRegistrationToServer(firebasetoken);
+        if(firebasetoken!=null)
+            Log.d("token: ",firebasetoken);
+
     }
     public static Context getAppContext() {
         return MyApplication.mycontext;
@@ -208,18 +232,18 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
 //    }
 
     public static void sendNotification(JSONObject jso) {
-        PnGcmMessage gcmMessage = new PnGcmMessage();
-        gcmMessage.setData(jso);
-        PnMessage message = new PnMessage(
-                pubnub,
-                AppConstants.CHANNEL_NOTIFY,
-                callback,
-                gcmMessage);
-        try {
-            message.publish();
-        } catch (PubnubException e) {
-            e.printStackTrace();
-        }
+//        PnGcmMessage gcmMessage = new PnGcmMessage();
+//        gcmMessage.setData(jso);
+//        PnMessage message = new PnMessage(
+//                pubnub,
+//                AppConstants.CHANNEL_NOTIFY,
+//                callback,
+//                gcmMessage);
+//        try {
+//            message.publish();
+//        } catch (PubnubException e) {
+//            e.printStackTrace();
+//        }
     }
     public static void sendNotificationToChannel(JSONObject jso, String channel) {
         PnGcmMessage gcmMessage = new PnGcmMessage();
@@ -386,6 +410,7 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
             editor.putString(AppConstants.PROPERTY_APP_STATE, "ready");
             editor.putInt("did", d.id);
             editor.putString("dname", d.name);
+            editor.putInt("vid", d.vehicle.ID);
 //            editor.putString("demail", d.email);
 //            editor.putString("dimage", d.image);
             editor.apply();
@@ -406,6 +431,10 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
         }
         public static int getLoggedDriverID() {
             int did = prefs.getInt("did", 0);
+            return did;
+        }
+        public static int getLoggedDriverVehicleID() {
+            int did = prefs.getInt("vid", 0);
             return did;
         }
 

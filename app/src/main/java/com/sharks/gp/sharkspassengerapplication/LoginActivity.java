@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Driver;
 import com.sharks.gp.sharkspassengerapplication.myclasses.MyURL;
+import com.sharks.gp.sharkspassengerapplication.myclasses.Vehicle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,7 +116,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         JSONObject driver = obj.getJSONObject("driver");
                         String fullname = driver.getString("fullname");
+                        int vehicle_id = Integer.valueOf(driver.getString("vehicle_id"));
                         d.name=fullname;
+                        d.vehicle=new Vehicle(vehicle_id);
                         Toast.makeText(LoginActivity.this, "Welcome "+fullname, Toast.LENGTH_LONG).show();
 
                         MyApplication.storeLogin(d);

@@ -28,6 +28,9 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -41,13 +44,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.pubnub.api.Callback;
-import com.pubnub.api.PubnubError;
-import com.pubnub.api.PubnubException;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
 import com.sharks.gp.sharkspassengerapplication.myclasses.LatLngInterpolator;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MainMapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, LocationListener {
@@ -57,7 +59,12 @@ public class MainMapActivity extends AppCompatActivity
 
     //testtt
     int driverid;// = 1;
+    int vehicleid;// = 1;
+
     Location loc;
+
+    ArrayList<Marker> markers = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,7 @@ public class MainMapActivity extends AppCompatActivity
         setTitle("Sharks");
 
         driverid=MyApplication.getLoggedDriverID();
+        vehicleid=MyApplication.getLoggedDriverVehicleID();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -85,16 +93,66 @@ public class MainMapActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        /////recive trip request
-        IntentFilter filter = new IntentFilter(AppConstants.BROADCAST_TRIP_REQUEST_ACTION);
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_TRIPS).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                startActivity(new Intent(MainMapActivity.this, TripRequestActivity.class));
-                finish();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    try {
+                        int did = postSnapshot.child("did").getValue(Integer.class);
+                        String status = postSnapshot.child("status").getValue(String.class);
+                        if (did == driverid && status.equals("requested")) {//trip request
+                            int tid = Integer.parseInt(postSnapshot.getKey());
+                            double ilat = postSnapshot.child("ilat").getValue(Double.class);
+                            double ilng = postSnapshot.child("ilng").getValue(Double.class);
+                            String details = postSnapshot.child("details").getValue(String.class);
+                            Long timestamp = postSnapshot.child("timestamp").getValue(Long.class);
+                            int pid = postSnapshot.child("pid").getValue(Integer.class);
+
+
+                            MyApplication.storeRequest(ilat, ilng, details, tid, timestamp, pid);
+                            startActivity(new Intent(MainMapActivity.this, TripRequestActivity.class));
+                            finish();
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainMapActivity.this, "There is new request but the problem : "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+//                String status = dataSnapshot.child("status").getValue(String.class);
+//
+//                if(status.equals("started")) {
+//
+//                    double destlat = dataSnapshot.child("destlat").getValue(Double.class);
+//                    double destlng = dataSnapshot.child("destlng").getValue(Double.class);
+//
+//                    //save request for activity use
+//                    MyApplication.setInTripState(destlat, destlng);
+//                    startActivity(new Intent(ArrivingActivity.this, InTripActivity.class));
+//                    finish();
+//                }
+
             }
-        };
-        registerReceiver(receiver, filter);
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
+
+        /////recive trip request
+//        IntentFilter filter = new IntentFilter(AppConstants.BROADCAST_TRIP_REQUEST_ACTION);
+//        BroadcastReceiver receiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                startActivity(new Intent(MainMapActivity.this, TripRequestActivity.class));
+//                finish();
+//            }
+//        };
+//        registerReceiver(receiver, filter);
 
     }
 
@@ -163,77 +221,123 @@ public class MainMapActivity extends AppCompatActivity
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallblueshark)));
 
 
-        //listen to all vehicles moves
-        try {
-            MyApplication.pubnub.subscribe(AppConstants.CHANNEL_PartnersLocation, new Callback() {
-                        @Override
-                        public void connectCallback(String channel, Object message) {
-//                            pubnub.publish("my_channel", "Hello from the PubNub Java SDK", new Callback() {});
-                        }
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_VEHICLES).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        @Override
-                        public void disconnectCallback(String channel, Object message) {
-                            System.out.println("SUBSCRIBE : DISCONNECT on channel:" + channel
-                                    + " : " + message.getClass() + " : "
-                                    + message.toString());
-                        }
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    try {
+                        int vid = Integer.parseInt(postSnapshot.getKey());
+                        double lat = postSnapshot.child("lat").getValue(Double.class);
+                        double lng = postSnapshot.child("lng").getValue(Double.class);
 
-                        public void reconnectCallback(String channel, Object message) {
-                            System.out.println("SUBSCRIBE : RECONNECT on channel:" + channel
-                                    + " : " + message.getClass() + " : "
-                                    + message.toString());
-                        }
+                        ll = new LatLng(lat, lng);
 
-                        @Override
-                        public void successCallback(String channel, Object message) { //l msg bttst2bl hna
-                            System.out.println("SUBSCRIBE : " + channel + " : "
-                                    + message.getClass() + " : " + message.toString());
-
-                            try {
-                                JSONObject obj = (JSONObject) message;
-                                id = obj.getInt("did");
-                                Double lat = obj.getDouble("lat");
-                                Double lng = obj.getDouble("lng");
-                                ll = new LatLng(lat, lng);
-
-                                runOnUiThread(new Runnable() { // l runnable d 3shn err IllegalStateException 3shn d async
-                                    @Override
-                                    public void run() {
-                                        // Your code to run in GUI thread here
-                                        if (id == driverid) {//get location for my vehicle
-//                                            drivermarker.setPosition(ll);
-                                            //animation
-                                            animateMarkerToGB(drivermarker,ll);
-//                                            //move to this location
-//                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
-//                                            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                                            mMap.animateCamera(CameraUpdateFactory.newLatLng(ll));
-
-                                        }
-                                        else {
-                                            mMap.addMarker(new MarkerOptions()
-                                                    .position(ll)
-                                                    .title("Another Driver Location")
-                                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallorangeshark)));
-                                        }
-                                    }
-                                });
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        if (vid == vehicleid) {
+                            animateMarkerToGB(drivermarker, ll);
+                        } else {
+                            int f = 0;
+                            for (int i = 0; i < markers.size(); i++) {
+                                if (markers.get(i).getSnippet().toString().equals(String.valueOf(vid))) {
+                                    //markers.get(i).setPosition(ll);
+                                    // animation part
+                                    animateMarkerToGB(markers.get(i), ll);
+                                    f = 1;
+                                }
+                            }
+                            if (f == 0) {
+                                markers.add(mMap.addMarker(new MarkerOptions()
+                                        .position(ll)
+                                        .title("Shark Location")
+                                        .snippet(String.valueOf(vid))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallblueshark))));
                             }
                         }
-
-                        @Override
-                        public void errorCallback(String channel, PubnubError error) {
-                            System.out.println("SUBSCRIBE : ERROR on channel " + channel
-                                    + " : " + error.toString());
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();//3shn momkn fl test yb2a fy node msh feha lat msln
                     }
-            );
-        } catch (PubnubException e) {
-            System.out.println(e.toString());
-        }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
+
+//        //listen to all vehicles moves
+//        try {
+//            MyApplication.pubnub.subscribe(AppConstants.CHANNEL_PartnersLocation, new Callback() {
+//                        @Override
+//                        public void connectCallback(String channel, Object message) {
+////                            pubnub.publish("my_channel", "Hello from the PubNub Java SDK", new Callback() {});
+//                        }
+//
+//                        @Override
+//                        public void disconnectCallback(String channel, Object message) {
+//                            System.out.println("SUBSCRIBE : DISCONNECT on channel:" + channel
+//                                    + " : " + message.getClass() + " : "
+//                                    + message.toString());
+//                        }
+//
+//                        public void reconnectCallback(String channel, Object message) {
+//                            System.out.println("SUBSCRIBE : RECONNECT on channel:" + channel
+//                                    + " : " + message.getClass() + " : "
+//                                    + message.toString());
+//                        }
+//
+//                        @Override
+//                        public void successCallback(String channel, Object message) { //l msg bttst2bl hna
+//                            System.out.println("SUBSCRIBE : " + channel + " : "
+//                                    + message.getClass() + " : " + message.toString());
+//
+//                            try {
+//                                JSONObject obj = (JSONObject) message;
+//                                id = obj.getInt("did");
+//                                Double lat = obj.getDouble("lat");
+//                                Double lng = obj.getDouble("lng");
+//                                ll = new LatLng(lat, lng);
+//
+//                                runOnUiThread(new Runnable() { // l runnable d 3shn err IllegalStateException 3shn d async
+//                                    @Override
+//                                    public void run() {
+//                                        // Your code to run in GUI thread here
+//                                        if (id == driverid) {//get location for my vehicle
+////                                            drivermarker.setPosition(ll);
+//                                            //animation
+//                                            animateMarkerToGB(drivermarker,ll);
+////                                            //move to this location
+////                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
+////                                            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+//                                            mMap.animateCamera(CameraUpdateFactory.newLatLng(ll));
+//
+//                                        }
+//                                        else {
+//                                            mMap.addMarker(new MarkerOptions()
+//                                                    .position(ll)
+//                                                    .title("Another Driver Location")
+//                                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallorangeshark)));
+//                                        }
+//                                    }
+//                                });
+//
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void errorCallback(String channel, PubnubError error) {
+//                            System.out.println("SUBSCRIBE : ERROR on channel " + channel
+//                                    + " : " + error.toString());
+//                        }
+//                    }
+//            );
+//        } catch (PubnubException e) {
+//            System.out.println(e.toString());
+//        }
     }
 
     private void createAndShowAlertDialog() {

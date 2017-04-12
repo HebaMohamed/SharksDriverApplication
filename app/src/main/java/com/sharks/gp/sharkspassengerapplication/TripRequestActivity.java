@@ -106,7 +106,7 @@ public class TripRequestActivity extends AppCompatActivity {
 //                        startActivity(new Intent(TripRequestActivity.this, ArrivingActivity.class));
 //                        finish();
                         handler.removeMessages(0);
-                        accepttrip(trip.trip_ID,MyApplication.getLoggedDriverID());
+                        accepttrip(trip.trip_ID,MyApplication.getLoggedDriverID(),trip.p.id);
                     }
                 });
 
@@ -133,6 +133,7 @@ public class TripRequestActivity extends AppCompatActivity {
                                 //remove request
                                 MyApplication.beReady();
                                 MyApplication.removeNotifications(1);
+                                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("ignored");
                                 startActivity(new Intent(TripRequestActivity.this, MainMapActivity.class));
                                 finish();
                                 //send request to ignored tripsto increase count
@@ -234,7 +235,7 @@ public class TripRequestActivity extends AppCompatActivity {
         progress.setCanceledOnTouchOutside(false);
     }
 
-    void accepttrip(int tripid,int driverid) {
+    void accepttrip(int tripid,int driverid, int pid) {
         progress.show();
 //        JSONObject toobj = new JSONObject();
 //        try {
@@ -245,7 +246,7 @@ public class TripRequestActivity extends AppCompatActivity {
 //        }
 //        final String requestBody = toobj.toString();
 
-        StringRequest sr = new StringRequest(Request.Method.GET, MyURL.accepttrip+tripid+"/"+driverid, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.GET, MyURL.accepttrip+tripid+"/"+driverid+"/"+pid, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -256,29 +257,34 @@ public class TripRequestActivity extends AppCompatActivity {
 
                     //progress.hide();
                     if (success == 1) {
-                        JSONObject tripobj = obj.getJSONObject("tripobj");
+//                        JSONObject tripobj = obj.getJSONObject("tripobj");
                         JSONObject passenger = obj.getJSONObject("passenger");
 
+//                        MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("approved");
 
-                        Trip t = new Trip(tripobj.getInt("tripid"));
-                        t.start_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(tripobj.getString("start"));
-                        t.end_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(tripobj.getString("end"));
+
+//                        Trip t = new Trip(tripobj.getInt("tripid"));
+//                        t.start_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(tripobj.getString("start"));
+//                        t.end_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(tripobj.getString("end"));
 
 //                        t.price = new Double(tripobj.getDouble("price"));
 //                        t.comment = new String(tripobj.getString("comment"));
 //                        t.rating = new Double(tripobj.getDouble("ratting"));
-                        t.p = new Passenger(tripobj.getInt("passenger_id"));
-                        t.d = new Driver(tripobj.getInt("driver_id"));
+//                        t.p = new Passenger(tripobj.getInt("passenger_id"));
+//                        t.d = new Driver(tripobj.getInt("driver_id"));
 
-                        sendTripAcceptance("passenger"+t.p.id);
+//                        sendTripAcceptance("passenger"+t.p.id);
 
 //                        Passenger p =  new Passenger(1,"","Heba","Female",21,24684,248854,"English","h@h.h");
-                        Passenger p =  new Passenger(t.p.id);
-                        p.fullName=passenger.getString("fullname");
-                        p.phone=passenger.getInt("phone");
+//                        Passenger p =  new Passenger(t.p.id);
+
+                        trip.p.fullName=passenger.getString("fullname");
+                        trip.p.phone=passenger.getInt("phone");
 
 
-                        MyApplication.storeTripAcceptance(p);
+//                        MyApplication.storeTripAcceptance(p);
+                        MyApplication.storeTripAcceptance(trip.p);
+
                         MyApplication.removeNotifications(1);
                         //send notification to passenger
 

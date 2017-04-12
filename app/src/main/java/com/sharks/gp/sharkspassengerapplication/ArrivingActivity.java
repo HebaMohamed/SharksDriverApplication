@@ -8,11 +8,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,6 +24,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -32,10 +39,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
-import com.pubnub.api.Callback;
-import com.pubnub.api.PubnubError;
-import com.pubnub.api.PubnubException;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
+import com.sharks.gp.sharkspassengerapplication.myclasses.LatLngInterpolator;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Passenger;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Trip;
 import com.sharks.gp.sharkspassengerapplication.myservices.LocationService;
@@ -65,6 +70,8 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
 //    int driverid = 1;
     static int driverid;
 
+    int vid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +98,7 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
         try {
             trip = MyApplication.getTripRequest();
             passenger = MyApplication.getTripPassenger();
+            vid = MyApplication.getLoggedDriverVehicleID();
 
             passengernametxt.setText(passenger.fullName);
             addresstxt.setText(MyApplication.getLocationAddress(trip.pickup));
@@ -167,70 +175,125 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(pickup));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_VEHICLES).child(String.valueOf(vid)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                double lat = dataSnapshot.child("lat").getValue(Double.class);
+                double lng = dataSnapshot.child("lng").getValue(Double.class);
+
+                animateMarkerToGB(drivermarker,new LatLng(lat, lng));
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
+////
+//        //listen to my vehicles moves
+//        try {
+//            pubnub.subscribe(AppConstants.CHANNEL_PartnersLocation, new Callback() {
+//                        @Override
+//                        public void connectCallback(String channel, Object message) {
+////                            pubnub.publish("my_channel", "Hello from the PubNub Java SDK", new Callback() {});
+//                        }
 //
-        //listen to my vehicles moves
-        try {
-            pubnub.subscribe(AppConstants.CHANNEL_PartnersLocation, new Callback() {
-                        @Override
-                        public void connectCallback(String channel, Object message) {
-//                            pubnub.publish("my_channel", "Hello from the PubNub Java SDK", new Callback() {});
-                        }
-
-                        @Override
-                        public void disconnectCallback(String channel, Object message) {
-                            System.out.println("SUBSCRIBE : DISCONNECT on channel:" + channel
-                                    + " : " + message.getClass() + " : "
-                                    + message.toString());
-                        }
-
-                        public void reconnectCallback(String channel, Object message) {
-                            System.out.println("SUBSCRIBE : RECONNECT on channel:" + channel
-                                    + " : " + message.getClass() + " : "
-                                    + message.toString());
-                        }
-
-                        @Override
-                        public void successCallback(String channel, Object message) { //l msg bttst2bl hna
-                            System.out.println("SUBSCRIBE : " + channel + " : "
-                                    + message.getClass() + " : " + message.toString());
-
-                            try {
-                                JSONObject obj = (JSONObject) message;
-                                int id = obj.getInt("id");
-                                if (id == driverid) {//get location for my vehicle
-                                    Double lat = obj.getDouble("lat");
-                                    Double lng = obj.getDouble("lng");
-                                    final LatLng ll = new LatLng(lat, lng);
-
-                                    runOnUiThread(new Runnable() { // l runnable d 3shn err IllegalStateException 3shn d async
-                                        @Override
-                                        public void run() {
-                                            // Your code to run in GUI thread here
-                                            drivermarker.setPosition(ll);
-                                        }
-                                    });
-
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void errorCallback(String channel, PubnubError error) {
-                            System.out.println("SUBSCRIBE : ERROR on channel " + channel
-                                    + " : " + error.toString());
-                        }
-                    }
-            );
-        } catch (PubnubException e) {
-            System.out.println(e.toString());
-        }
-
+//                        @Override
+//                        public void disconnectCallback(String channel, Object message) {
+//                            System.out.println("SUBSCRIBE : DISCONNECT on channel:" + channel
+//                                    + " : " + message.getClass() + " : "
+//                                    + message.toString());
+//                        }
+//
+//                        public void reconnectCallback(String channel, Object message) {
+//                            System.out.println("SUBSCRIBE : RECONNECT on channel:" + channel
+//                                    + " : " + message.getClass() + " : "
+//                                    + message.toString());
+//                        }
+//
+//                        @Override
+//                        public void successCallback(String channel, Object message) { //l msg bttst2bl hna
+//                            System.out.println("SUBSCRIBE : " + channel + " : "
+//                                    + message.getClass() + " : " + message.toString());
+//
+//                            try {
+//                                JSONObject obj = (JSONObject) message;
+//                                int id = obj.getInt("id");
+//                                if (id == driverid) {//get location for my vehicle
+//                                    Double lat = obj.getDouble("lat");
+//                                    Double lng = obj.getDouble("lng");
+//                                    final LatLng ll = new LatLng(lat, lng);
+//
+//                                    runOnUiThread(new Runnable() { // l runnable d 3shn err IllegalStateException 3shn d async
+//                                        @Override
+//                                        public void run() {
+//                                            // Your code to run in GUI thread here
+//                                            drivermarker.setPosition(ll);
+//                                        }
+//                                    });
+//
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void errorCallback(String channel, PubnubError error) {
+//                            System.out.println("SUBSCRIBE : ERROR on channel " + channel
+//                                    + " : " + error.toString());
+//                        }
+//                    }
+//            );
+//        } catch (PubnubException e) {
+//            System.out.println(e.toString());
+//        }
+//
 
 
 
     }
+
+    static void animateMarkerToGB(final Marker marker, final LatLng finalPosition) {
+        final LatLng startPosition = marker.getPosition();
+
+        ///
+//        initGMaps(mypos,finalPosition,selectedtransportModeFlag);
+        ///
+        final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.Spherical();
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        final Interpolator interpolator = new AccelerateDecelerateInterpolator();
+        final float durationInMs = 3000;
+
+        handler.post(new Runnable() {
+            long elapsed;
+            float t;
+            float v;
+
+            @Override
+            public void run() {
+                // Calculate progress using interpolator
+                elapsed = SystemClock.uptimeMillis() - start;
+                t = elapsed / durationInMs;
+                v = interpolator.getInterpolation(t);
+
+                marker.setPosition(latLngInterpolator.interpolate(v, startPosition, finalPosition));
+
+                // Repeat till progress is complete.
+                if (t < 1) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                }
+            }
+        });
+    }
+
 
     private void createAndShowAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -276,7 +339,11 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
                 MyApplication.startTrip(destination,place.getAddress().toString());//testttt send to /accepttrip      //get destination
 //              startService(new Intent(MyApplication.getAppContext(), LocationService.class));//only start when start trip //start service
 
-                sendTripStarted("passenger"+passenger.id,place.getLatLng().latitude,place.getLatLng().longitude);
+                //sendTripStarted("passenger"+passenger.id,place.getLatLng().latitude,place.getLatLng().longitude);
+                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("started");
+                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("destlat").setValue(destination.getLatitude());
+                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("destlng").setValue(destination.getLongitude());
+
 
                 startActivity(new Intent(ArrivingActivity.this, InTripActivity.class));
                 finish();
