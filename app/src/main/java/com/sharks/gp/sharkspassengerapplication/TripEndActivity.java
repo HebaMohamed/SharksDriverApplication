@@ -33,12 +33,17 @@ public class TripEndActivity extends AppCompatActivity {
     public static double durationcost;
 
 
-    TextView costtxt, stxt, dtxt, distancetxt, distancecosttxt, durationtxt, durationcosttxt;
+//    TextView costtxt, stxt, dtxt, distancetxt, distancecosttxt, durationtxt, durationcosttxt;
+    TextView kmtxt,costtxt,stxt,dtxt;
     Button donebtn;
+
+    TextView p1txt,p2txt,p3txt,p4txt,p5txt,p6txt,p7txt,p8txt,p9txt,p10txt,p11txt,p12txt;
+    TextView np1txt,np2txt,np3txt,np4txt,np5txt,np6txt,np7txt,np8txt,np9txt,np10txt,np11txt,np12txt;
 
     ProgressDialog progress;
 
     Trip trip;
+    int vehicleid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +54,45 @@ public class TripEndActivity extends AppCompatActivity {
         costtxt=(TextView) findViewById(R.id.costtxt);
         stxt=(TextView) findViewById(R.id.stxt);
         dtxt=(TextView) findViewById(R.id.dtxt);
-        distancetxt=(TextView) findViewById(R.id.distancetxt);//
-        distancecosttxt=(TextView) findViewById(R.id.distancecosttxt);//
-        durationtxt=(TextView) findViewById(R.id.durationtxt);
-        durationcosttxt=(TextView) findViewById(R.id.durationcosttxt);
+//        distancetxt=(TextView) findViewById(R.id.distancetxt);//
+//        distancecosttxt=(TextView) findViewById(R.id.distancecosttxt);//
+//        durationtxt=(TextView) findViewById(R.id.durationtxt);
+//        durationcosttxt=(TextView) findViewById(R.id.durationcosttxt);
         donebtn=(Button)findViewById(R.id.donebtn);
+
+        kmtxt=(TextView) findViewById(R.id.kmtxt);
+
+
+        p1txt=(TextView) findViewById(R.id.p1txt);
+        p2txt=(TextView) findViewById(R.id.p2txt);
+        p3txt=(TextView) findViewById(R.id.p3txt);
+        p4txt=(TextView) findViewById(R.id.p4txt);
+        p5txt=(TextView) findViewById(R.id.p5txt);
+        p6txt=(TextView) findViewById(R.id.p6txt);
+        p7txt=(TextView) findViewById(R.id.p7txt);
+        p8txt=(TextView) findViewById(R.id.p8txt);
+        p9txt=(TextView) findViewById(R.id.p9txt);
+        p10txt=(TextView) findViewById(R.id.p10txt);
+        p11txt=(TextView) findViewById(R.id.p11txt);
+        p12txt=(TextView) findViewById(R.id.p12txt);
+
+        np1txt=(TextView) findViewById(R.id.np1txt);
+        np2txt=(TextView) findViewById(R.id.np2txt);
+        np3txt=(TextView) findViewById(R.id.np3txt);
+        np4txt=(TextView) findViewById(R.id.np4txt);
+        np5txt=(TextView) findViewById(R.id.np5txt);
+        np6txt=(TextView) findViewById(R.id.np6txt);
+        np7txt=(TextView) findViewById(R.id.np7txt);
+        np8txt=(TextView) findViewById(R.id.np8txt);
+        np9txt=(TextView) findViewById(R.id.np9txt);
+        np10txt=(TextView) findViewById(R.id.np10txt);
+        np11txt=(TextView) findViewById(R.id.np11txt);
+        np12txt=(TextView) findViewById(R.id.np12txt);
+
 
         try {
             trip=MyApplication.getTripRequest();
+            vehicleid=MyApplication.getLoggedDriverVehicleID();
             stxt.setText(MyApplication.getLocationAddress(trip.pickup));
             dtxt.setText(MyApplication.getLocationAddress(trip.destination));
         } catch (Exception e) {
@@ -92,7 +128,7 @@ public class TripEndActivity extends AppCompatActivity {
 
     void calculatecost() {
         progress.show();
-        StringRequest sr = new StringRequest(Request.Method.POST, MyURL.donetrip + "/" + trip.trip_ID, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.GET, MyURL.donetrip + trip.trip_ID + "/" + vehicleid, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -106,12 +142,42 @@ public class TripEndActivity extends AppCompatActivity {
                         distance = obj.getDouble("distance");
                         distancecost = obj.getDouble("distancecost");
 
+                        JSONObject pattrenobj = obj.getJSONObject("pattrenobj");
+                        p1txt.setText(pattrenobj.getInt("p1"));
+                        p4txt.setText(pattrenobj.getInt("p2"));
+                        p3txt.setText(pattrenobj.getInt("p3"));
+                        p4txt.setText(pattrenobj.getInt("p4"));
+                        p5txt.setText(pattrenobj.getInt("p5"));
+                        p6txt.setText(pattrenobj.getInt("p6"));
+                        p7txt.setText(pattrenobj.getInt("p7"));
+                        p8txt.setText(pattrenobj.getInt("p8"));
+                        p9txt.setText(pattrenobj.getInt("p9"));
+                        p10txt.setText(pattrenobj.getInt("p10"));
+                        p11txt.setText(pattrenobj.getInt("p11"));
+                        p12txt.setText(pattrenobj.getInt("p12"));
 
-                        distancetxt.setText(Double.toString(distance));
-                        distancecosttxt.setText(Double.toString(distancecost));
-                        durationcost=0;//testtt;
-                        tripcost=durationcost+distancecost;
+                        JSONObject pattrennames = obj.getJSONObject("pattrennames");
+                        np1txt.setText(pattrennames.getString("p1"));
+                        np2txt.setText(pattrennames.getString("p2"));
+                        np3txt.setText(pattrennames.getString("p3"));
+                        np4txt.setText(pattrennames.getString("p4"));
+                        np5txt.setText(pattrennames.getString("p5"));
+                        np6txt.setText(pattrennames.getString("p6"));
+                        np7txt.setText(pattrennames.getString("p7"));
+                        np8txt.setText(pattrennames.getString("p8"));
+                        np9txt.setText(pattrennames.getString("p9"));
+                        np10txt.setText(pattrennames.getString("p10"));
+                        np11txt.setText(pattrennames.getString("p11"));
+                        np12txt.setText(pattrennames.getString("p12"));
+
+//                        distancetxt.setText(Double.toString(distance)+"Km");
+//                        distancecosttxt.setText(Double.toString(distancecost)+"$");
+                        kmtxt.setText(Double.toString(distance)+"Km");
                         costtxt.setText(tripcost+"$");
+
+//                        durationcost=0;//testtt;
+//                        tripcost=durationcost+distancecost;
+//                        costtxt.setText(tripcost+"$");
                         progress.hide();
 
                     } else {

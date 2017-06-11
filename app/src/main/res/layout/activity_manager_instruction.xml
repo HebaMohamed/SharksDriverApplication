@@ -13,16 +13,16 @@
         android:background="@color/colorPrimary"
         android:id="@+id/linearLayout3">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="There is no instructions untill now "
-            android:id="@+id/headtxt"
-            android:padding="7dp"
-            android:layout_gravity="center_horizontal"
-            android:textSize="12sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="#fff"-->
+            <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+            <!--android:text="There is no instructions untill now "-->
+            <!--android:id="@+id/headtxt"-->
+            <!--android:padding="7dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:textSize="12sp" />-->
 
     </LinearLayout>
     <ListView

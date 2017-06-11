@@ -10,6 +10,10 @@
             android:id="@+id/nav_mgr"
             android:icon="@android:drawable/ic_menu_agenda"
             android:title="Manager Instructions" />
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@android:drawable/ic_menu_day"
+            android:title="Brief Report" />
     </group>
 
     <item android:title="">

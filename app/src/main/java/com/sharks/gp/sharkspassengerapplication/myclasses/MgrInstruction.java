@@ -18,7 +18,7 @@ public class MgrInstruction {
     }
     public String getInstructionDateTimeString(){
         Format sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date netDate = (new Date(timestamp));
+        Date netDate = new Date(timestamp);//(new Date(timestamp/1000));
         String s = sdf.format(netDate);
         return s;
     }

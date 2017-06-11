@@ -15,4 +15,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:padding="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/carflat"/>
+
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#c5ffffff"
+        android:padding="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/modeltxt"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:text="Model"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/colortxt"
+            android:textColor="@color/colorPrimary"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:text="Color"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/numtxt"
+            android:textColor="@color/colorPrimary"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:text="Number"/>
+    </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

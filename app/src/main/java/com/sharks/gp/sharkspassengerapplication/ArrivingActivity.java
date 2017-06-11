@@ -52,7 +52,6 @@ import java.util.Arrays;
 
 import at.markushi.ui.CircleButton;
 
-import static com.sharks.gp.sharkspassengerapplication.MyApplication.pubnub;
 
 public class ArrivingActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -330,6 +329,7 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
 //                LatLng ll = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
+//                LatLng ll = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
 
                 Location destination = new Location("");
                 destination.setLatitude(place.getLatLng().latitude);
@@ -343,6 +343,8 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
                 MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("started");
                 MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("destlat").setValue(destination.getLatitude());
                 MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("destlng").setValue(destination.getLongitude());
+                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("start").setValue(System.currentTimeMillis());
+
 
 
                 startActivity(new Intent(ArrivingActivity.this, InTripActivity.class));
@@ -356,16 +358,16 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
-    void sendTripStarted(String channel, double dlat, double dlng){
-
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put("type", "tripstarted");
-            jso.put("destlat", dlat);
-            jso.put("destlng", dlng);
-            MyApplication.sendNotificationToChannel(jso,channel);
-
-        } catch (JSONException e) { e.printStackTrace(); }
-    }
+//    void sendTripStarted(String channel, double dlat, double dlng){
+//
+//        JSONObject jso = new JSONObject();
+//        try {
+//            jso.put("type", "tripstarted");
+//            jso.put("destlat", dlat);
+//            jso.put("destlng", dlng);
+//            MyApplication.sendNotificationToChannel(jso,channel);
+//
+//        } catch (JSONException e) { e.printStackTrace(); }
+//    }
 
 }

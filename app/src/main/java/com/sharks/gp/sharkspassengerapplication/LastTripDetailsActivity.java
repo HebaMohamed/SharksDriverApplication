@@ -125,38 +125,77 @@ public class LastTripDetailsActivity extends AppCompatActivity {
                     int success = Integer.parseInt(obj.getString("success"));
 
                     if (success == 1) {
+
                         JSONObject trip=obj.getJSONObject("trip");
                         JSONArray pathway=trip.getJSONArray("pathway");
-                        JSONObject pickupobj = pathway.getJSONObject(0);
-                        JSONObject destinationobj=pathway.getJSONObject(pathway.length()-1);
+//                        JSONObject pickupobj = pathway.getJSONObject(0);
+//                        JSONObject destinationobj=pathway.getJSONObject(pathway.length()-1);
 
                         Trip t =new Trip(selectedTripID);
-                        t.start_Date= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(trip.getString("start"));
-                        t.end_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(trip.getString("end"));;
+//                        t.start_Date= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(trip.getString("start"));
+//                        t.end_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(trip.getString("end"));;
+                        t.start_Date= new Date(trip.getLong("start"));//fr.parse(fr.format(new Date(object.getLong("start"))));//.parse bytl3 date lkn format bytl3 string
+                        t.end_Date = new Date(trip.getLong("end"));//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(object.getString("end"));;
                         t.price = new Double(trip.getDouble("price"));
                         t.comment=new String(trip.getString("comment"));
                         t.rating = new Double(trip.getDouble("ratting"));
                         t.p = new Passenger(trip.getInt("passenger_id"));
-//                        t.d =new Driver(trip.getInt("driver_id"));
-                        t.destination.setLatitude(destinationobj.getDouble("lat"));
-                        t.destination.setLongitude(destinationobj.getDouble("lng"));
-                        t.pickup.setLatitude(pickupobj.getDouble("lat"));
-                        t.pickup.setLongitude(pickupobj.getDouble("lng"));
+                        t.p.fullName = trip.getString("passenger_name");
+////                        t.d =new Driver(trip.getInt("driver_id"));
+//                        t.destination.setLatitude(destinationobj.getDouble("lat"));
+//                        t.destination.setLongitude(destinationobj.getDouble("lng"));
+//                        t.pickup.setLatitude(pickupobj.getDouble("lat"));
+//                        t.pickup.setLongitude(pickupobj.getDouble("lng"));
+
+                        if(pathway.length()>0) {
+                            JSONObject pickupobj = pathway.getJSONObject(0);
+                            JSONObject destinationobj;
+                            if(pathway.length()>1) {
+                                destinationobj = pathway.getJSONObject(pathway.length() - 1);
+
+                                //set map img
+                                for (int j = 0; j<pathway.length(); j++){
+                                    Location tl = new Location("");
+                                    tl.setLatitude(pathway.getJSONObject(j).getDouble("lat"));
+                                    tl.setLongitude(pathway.getJSONObject(j).getDouble("lng"));
+                                    pathwayLocs.add(tl);
+                                }
+                                String locurl = getpathwaymap();
+                                URL url = new URL(locurl);
+                                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                mapimg.setImageBitmap(bmp);
+                            }
+                            else
+                                destinationobj=pickupobj;
+
+
+                            t.destination.setLatitude(destinationobj.getDouble("lat"));
+                            t.destination.setLongitude(destinationobj.getDouble("lng"));
+                            t.pickup.setLatitude(pickupobj.getDouble("lat"));
+                            t.pickup.setLongitude(pickupobj.getDouble("lng"));
+                            t.pickupAddress=MyApplication.getLocationAddress(t.destination);
+
+
+                        }
+                        else
+                            t.pickupAddress="Not Moved";
 
                         passengername.setText(t.p.fullName);
                         pickuploctxt.setText(MyApplication.getLocationAddress(t.pickup));
                         dropoffloctxt.setText(MyApplication.getLocationAddress(t.destination));
                         starttxt.setText(t.getStartdate());
                         endtxt.setText(t.getEnddate());
-                        tripratetxt.setText(t.rating + " Stars");
+//                        tripratetxt.setText(t.rating + " Stars");
                         costtxt.setText(t.price + " $");
-                        distancetxt.setText(getDistance() + "Km");
+                        distancetxt.setText((int)getDistance() + "Km");
                         durationtxt.setText(getDuration(t));
 
-                        String locurl = getpathwaymap();
-                        URL url = new URL(locurl);
-                        Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        mapimg.setImageBitmap(bmp);
+                        String scount = "";
+                        for (int s=0; s<t.rating; s++)
+                            scount+="★";
+                        tripratetxt.setText(scount);
+
+
 
 
                     } else {
@@ -241,7 +280,7 @@ public class LastTripDetailsActivity extends AppCompatActivity {
     }
 
     String getDuration(Trip t1){
-        long diff =  t1.start_Date.getTime() - t1.end_Date.getTime();
+        long diff =  t1.end_Date.getTime() - t1.start_Date.getTime();
         int numOfDays = (int) (diff / (1000 * 60 * 60 * 24));
         int hours = (int) (diff / (1000 * 60 * 60));
         int minutes = (int) (diff / (1000 * 60));

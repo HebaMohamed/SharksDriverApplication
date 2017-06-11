@@ -29,12 +29,13 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
         //Displaying token on logcat
         Log.d(TAG, "Refreshed token: " + refreshedToken);
-        sendRegistrationToServer(refreshedToken);
+       // sendRegistrationToServer(refreshedToken);
     }
 //
-    public static void sendRegistrationToServer(String token) {
+    public static void sendRegistrationToServer(String token,int id) {
 
-        myFirebaseRef.child("driver").child(String.valueOf(MyApplication.getLoggedDriverID())).child("token").setValue(token);
+        MyApplication.myFirebaseRef.child("driver").child(String.valueOf(id)).child("token").setValue(token);
+    }
 
 //
 //        StringRequest sr = new StringRequest(Request.Method.POST, MyURL.refreshtoken , new Response.Listener<String>() {
@@ -80,5 +81,5 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 //        Volley.newRequestQueue(MyApplication.getAppContext()).add(sr);
 //
 //
-    }
+
 }

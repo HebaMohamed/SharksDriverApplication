@@ -26,12 +26,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
+import com.sharks.gp.sharkspassengerapplication.myclasses.Driver;
 import com.sharks.gp.sharkspassengerapplication.myclasses.LatLngInterpolator;
 
 import org.json.JSONObject;
@@ -63,8 +64,11 @@ public class MainMapActivity extends AppCompatActivity
 
     Location loc;
 
+    Driver d;
+
     ArrayList<Marker> markers = new ArrayList<>();
 
+    TextView colortxt, modeltxt, numtxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +79,17 @@ public class MainMapActivity extends AppCompatActivity
 
         setTitle("Sharks");
 
+        colortxt = (TextView) findViewById(R.id.colortxt);
+        modeltxt = (TextView) findViewById(R.id.modeltxt);
+        numtxt = (TextView) findViewById(R.id.numtxt);
+
         driverid=MyApplication.getLoggedDriverID();
         vehicleid=MyApplication.getLoggedDriverVehicleID();
+        d=MyApplication.getLoggedDriver();
+
+        colortxt.setText(d.vehicle.Color);
+        modeltxt.setText(d.vehicle.Model);
+        numtxt.setText(d.vehicle.Plate_number);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -100,7 +113,7 @@ public class MainMapActivity extends AppCompatActivity
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     try {
-                        int did = postSnapshot.child("did").getValue(Integer.class);
+                        int did = postSnapshot.child("did").getValue(int.class);
                         String status = postSnapshot.child("status").getValue(String.class);
                         if (did == driverid && status.equals("requested")) {//trip request
                             int tid = Integer.parseInt(postSnapshot.getKey());
@@ -118,7 +131,7 @@ public class MainMapActivity extends AppCompatActivity
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(MainMapActivity.this, "There is new request but the problem : "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainMapActivity.this, "There is new request but the problem : "+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
 //                String status = dataSnapshot.child("status").getValue(String.class);
@@ -153,6 +166,32 @@ public class MainMapActivity extends AppCompatActivity
 //            }
 //        };
 //        registerReceiver(receiver, filter);
+
+
+        ////////listen to female requests
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_DRIVER).child(String.valueOf(driverid)).child("warninghelp").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                try{
+                    long femalesafteyid = dataSnapshot.child("femalesafteyid").getValue(Long.class);
+                    if(femalesafteyid!=0) {
+                        MyApplication.addFemaleHelp(femalesafteyid);
+
+                        startActivity(new Intent(MainMapActivity.this, HelpFemaleActivity.class));
+                        finish();
+                    }
+                }catch (NullPointerException ne){
+                    ne.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
 
     }
 
@@ -200,6 +239,8 @@ public class MainMapActivity extends AppCompatActivity
             startActivity(new Intent(MainMapActivity.this, ManagerInstructionActivity.class));
         } else if (id == R.id.nav_out) {
             createAndShowAlertDialog();
+        } else if (id == R.id.nav_report) {
+            startActivity(new Intent(MainMapActivity.this, ReportActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -217,8 +258,8 @@ public class MainMapActivity extends AppCompatActivity
 //        Location loc = MyApplication.getLastKnownLocation();
         drivermarker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(0,0))
-                        .title("Another Driver Location")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallblueshark)));
+                        .title("Your Location")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallorangeshark)));
 
 
         //listen & get initial value
@@ -346,6 +387,7 @@ public class MainMapActivity extends AppCompatActivity
         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+                MyApplication.myFirebaseRef.child("driver").child(String.valueOf(MyApplication.getLoggedDriverID())).child("logged").setValue("false");
                 MyApplication.storelogout();
                 startActivity(new Intent(MainMapActivity.this, MainActivity.class));
                 finish();
@@ -402,12 +444,12 @@ public class MainMapActivity extends AppCompatActivity
 
                     }
                 })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                    }
-                })
+//                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+//                    @Override
+//                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+//
+//                    }
+//                })
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();

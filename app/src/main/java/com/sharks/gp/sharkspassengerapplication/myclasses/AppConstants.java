@@ -32,7 +32,10 @@ public class AppConstants {
     public static final String FIREBASE_DB = "https://sharksmapandroid-158200.firebaseio.com/";
     public static final String FIRE_VEHICLES = "vehicles";
     public static final String FIRE_TRIPS= "trips";
+    public static final String FIRE_DRIVER= "driver";
 
+    public static final String FIRE_WARNING = "warning";
+    public static final String FIRE_FEMALESAFTEY = "femalesaftey";
 
 
 }

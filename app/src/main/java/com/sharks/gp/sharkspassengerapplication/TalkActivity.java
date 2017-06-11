@@ -21,9 +21,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Passenger;
 import com.sharks.gp.sharkspassengerapplication.myclasses.TalkMessage;
+import com.sharks.gp.sharkspassengerapplication.myclasses.Trip;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,11 +60,14 @@ public class TalkActivity extends AppCompatActivity {
 
     Passenger passenger;
 
+    Trip trip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_talk_activity);
         setTitle("Passenger Conversation");
+
         micbtn=(CircleButton)findViewById(R.id.micbtn);
         thumbupbtn=(CircleButton)findViewById(R.id.thumbupbtn);
         thumbdownbtn=(CircleButton)findViewById(R.id.thumbdownbtn);
@@ -70,6 +77,8 @@ public class TalkActivity extends AppCompatActivity {
 
         try {
             passenger=MyApplication.getTripPassenger();
+            trip = MyApplication.getTripRequest();
+
         } catch (Exception e) {
             e.printStackTrace();
             finish();
@@ -119,28 +128,72 @@ public class TalkActivity extends AppCompatActivity {
 //        msgs.add(new TalkMessage("d","yes"));
 //        setadapter(msgs,talklv);
 
-
-        /////recive passenger messages
-        IntentFilter filter = new IntentFilter(AppConstants.BROADCAST_MSG_ACTION);
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_TRIPS).child(String.valueOf(trip.trip_ID)).child("talk").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                String msg =  intent.getExtras().getString("msg");
-                String msgflag =  intent.getExtras().getString("msgflag");
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //translate
-                try {
-                    String str = callUrlAndParseResult("auto",languagesCodes.get(selectedIndex),msg);
-                    msgs.add(new TalkMessage(msgflag,str));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    msgs.add(new TalkMessage(msgflag,msg));
+                msgs.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    try {
+                        String msg = postSnapshot.child("msg").getValue(String.class);
+                        String f = postSnapshot.child("f").getValue(String.class);
+
+                        if(f!=null) {
+
+                            //translate
+                            try {
+                                String str;
+                                if (f.equals("p"))
+                                    str = callUrlAndParseResult("auto", languagesCodes.get(selectedIndex), msg);
+                                else
+                                    str = msg;
+                                msgs.add(new TalkMessage(f, str));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                msgs.add(new TalkMessage(f, msg));
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //Toast.makeText(MainMapActivity.this, "There is new request but the problem : "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-
                 setadapter(msgs,talklv);
+
             }
-        };
-        registerReceiver(receiver, filter);
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
+
+
+
+//        /////recive passenger messages
+//        IntentFilter filter = new IntentFilter(AppConstants.BROADCAST_MSG_ACTION);
+//        BroadcastReceiver receiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                String msg =  intent.getExtras().getString("msg");
+//                String msgflag =  intent.getExtras().getString("msgflag");
+//
+//                //translate
+//                try {
+//                    String str = callUrlAndParseResult("auto",languagesCodes.get(selectedIndex),msg);
+//                    msgs.add(new TalkMessage(msgflag,str));
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    msgs.add(new TalkMessage(msgflag,msg));
+//                }
+//
+//                setadapter(msgs,talklv);
+//            }
+//        };
+//        registerReceiver(receiver, filter);
 
 
 
@@ -204,32 +257,38 @@ public class TalkActivity extends AppCompatActivity {
             }
         };
         lv.setAdapter(adapter);
+        lv.setSelection(adapter.getCount() - 1);
     }
 
     //send pub msg notificaiton
     void sendMessage(String msg){
 
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put("type", "passengertalk");
-            jso.put("msg", msg);
-            jso.put("msgflag", "d");
-            MyApplication.sendNotificationToChannel(jso,"passenger"+passenger.id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        long t = System.currentTimeMillis();
+        MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("talk").child(String.valueOf(t)).child("msg").setValue(msg);
+        MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("talk").child(String.valueOf(t)).child("f").setValue("d");
 
-        //show msg
-        //translate
-        try {
-            String str = callUrlAndParseResult("auto",languagesCodes.get(selectedIndex),msg);
-            msgs.add(new TalkMessage("d",str));
-        } catch (Exception e) {
-            e.printStackTrace();
-            msgs.add(new TalkMessage("d",msg));
-        }
 
-        setadapter(msgs,talklv);
+//        JSONObject jso = new JSONObject();
+//        try {
+//            jso.put("type", "passengertalk");
+//            jso.put("msg", msg);
+//            jso.put("msgflag", "d");
+//            MyApplication.sendNotificationToChannel(jso,"passenger"+passenger.id);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        //show msg
+//        //translate
+//        try {
+//            String str = callUrlAndParseResult("auto",languagesCodes.get(selectedIndex),msg);
+//            msgs.add(new TalkMessage("d",str));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            msgs.add(new TalkMessage("d",msg));
+//        }
+//
+//        setadapter(msgs,talklv);
     }
 
 

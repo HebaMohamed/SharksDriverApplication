@@ -39,9 +39,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
-import com.pubnub.api.Callback;
-import com.pubnub.api.PubnubError;
-import com.pubnub.api.PubnubException;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
 import com.sharks.gp.sharkspassengerapplication.myclasses.LatLngInterpolator;
 import com.sharks.gp.sharkspassengerapplication.myclasses.MyURL;
@@ -59,7 +56,6 @@ import java.util.Map;
 
 import at.markushi.ui.CircleButton;
 
-import static com.sharks.gp.sharkspassengerapplication.MyApplication.pubnub;
 
 public class InTripActivity  extends FragmentActivity implements OnMapReadyCallback {
 
@@ -303,15 +299,15 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         dialog.show();
     }
 
-    void sendTripEnded(String channel){
-
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put("type", "tripended");
-            MyApplication.sendNotificationToChannel(jso,channel);
-
-        } catch (JSONException e) { e.printStackTrace(); }
-    }
+//    void sendTripEnded(String channel){
+//
+//        JSONObject jso = new JSONObject();
+//        try {
+//            jso.put("type", "tripended");
+//            MyApplication.sendNotificationToChannel(jso,channel);
+//
+//        } catch (JSONException e) { e.printStackTrace(); }
+//    }
 
     void getDirections(double newLat, double newLng){
 

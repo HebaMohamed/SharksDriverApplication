@@ -9,17 +9,24 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
 import com.sharks.gp.sharkspassengerapplication.myclasses.MgrInstruction;
+import com.sharks.gp.sharkspassengerapplication.myclasses.TalkMessage;
 
 import java.util.ArrayList;
 
 public class ManagerInstructionActivity extends AppCompatActivity {
 
     ListView instlv;
-    ArrayList<MgrInstruction> instructions;
     private ArrayAdapter adapter;
     TextView headtxt;
+
+    ArrayList<MgrInstruction> instructions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +34,48 @@ public class ManagerInstructionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manager_instruction);
         setTitle("Manager Instructions");
         instlv=(ListView)findViewById(R.id.instlv);
-        headtxt=(TextView)findViewById(R.id.headtxt);
-        instructions=MyApplication.getMgrsInstructions();
-        setadapter(instructions,instlv);
-        if(instructions.size()!=0)
-            headtxt.setText("Last Updated : "+instructions.get(instructions.size()-1).getInstructionDateTimeString());
-        MyApplication.removeNotifications(3);
+//        headtxt=(TextView)findViewById(R.id.headtxt);
+        //instructions=MyApplication.getMgrsInstructions();
+
+
+        int did = MyApplication.getLoggedDriverID();
+
+
+
+
+        //setadapter(instructions,instlv);
+//        if(instructions.size()!=0)
+//            headtxt.setText("Last Updated : "+instructions.get(instructions.size()-1).getInstructionDateTimeString());
+//        MyApplication.removeNotifications(3);
+
+
+
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_DRIVER).child(String.valueOf(did)).child("mgrinstruction").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                instructions.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Long time = Long.parseLong(postSnapshot.getKey());
+                    String msg = postSnapshot.getValue(String.class);
+                    MgrInstruction i = new MgrInstruction(msg,time);
+
+                    instructions.add(i);
+                }
+                setadapter(instructions,instlv);
+
+                if(instructions.size()==0)
+                    Toast.makeText(ManagerInstructionActivity.this, "There is no instructions for now", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
 
 
     }

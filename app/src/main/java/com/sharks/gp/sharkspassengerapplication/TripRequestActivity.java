@@ -214,17 +214,17 @@ public class TripRequestActivity extends AppCompatActivity {
         return diff;
     }
 
-    void sendTripAcceptance(String channel){
-
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put("type", "requestresponse");
-            jso.put("tripid", trip.trip_ID);
-            jso.put("driverid", MyApplication.getLoggedDriverID());
-            MyApplication.sendNotificationToChannel(jso,channel);
-
-        } catch (JSONException e) { e.printStackTrace(); }
-    }
+//    void sendTripAcceptance(String channel){
+//
+//        JSONObject jso = new JSONObject();
+//        try {
+//            jso.put("type", "requestresponse");
+//            jso.put("tripid", trip.trip_ID);
+//            jso.put("driverid", MyApplication.getLoggedDriverID());
+//            MyApplication.sendNotificationToChannel(jso,channel);
+//
+//        } catch (JSONException e) { e.printStackTrace(); }
+//    }
 
 
     void setuploading(){

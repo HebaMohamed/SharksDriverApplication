@@ -116,12 +116,28 @@ public class LoginActivity extends AppCompatActivity {
 
                         JSONObject driver = obj.getJSONObject("driver");
                         String fullname = driver.getString("fullname");
-                        int vehicle_id = Integer.valueOf(driver.getString("vehicle_id"));
-                        d.name=fullname;
+                        String img = driver.getString("img");
+//                        int vehicle_id = Integer.valueOf(driver.getString("vehicle_id"));
+                        d.name = fullname;
+                        d.image = img;
+
+                        JSONObject vehicle = obj.getJSONObject("vehicle");
+                        int vehicle_id = Integer.valueOf(vehicle.getString("vehicle_id"));
+                        String color = vehicle.getString("color");
+                        String plate_number = vehicle.getString("plate_number");
+                        String model = vehicle.getString("model");
+
                         d.vehicle=new Vehicle(vehicle_id);
+                        d.vehicle.Color = color;
+                        d.vehicle.Plate_number = plate_number;
+                        d.vehicle.Model = model;
+
                         Toast.makeText(LoginActivity.this, "Welcome "+fullname, Toast.LENGTH_LONG).show();
 
                         MyApplication.storeLogin(d);
+
+                        MyApplication.myFirebaseRef.child("driver").child(String.valueOf(d.id)).child("logged").setValue("true");
+
                         startActivity(new Intent(LoginActivity.this, MainMapActivity.class));
                         finish();
                     }
