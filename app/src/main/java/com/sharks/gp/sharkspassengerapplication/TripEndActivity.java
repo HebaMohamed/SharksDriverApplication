@@ -143,18 +143,18 @@ public class TripEndActivity extends AppCompatActivity {
                         distancecost = obj.getDouble("distancecost");
 
                         JSONObject pattrenobj = obj.getJSONObject("pattrenobj");
-                        p1txt.setText(pattrenobj.getInt("p1"));
-                        p4txt.setText(pattrenobj.getInt("p2"));
-                        p3txt.setText(pattrenobj.getInt("p3"));
-                        p4txt.setText(pattrenobj.getInt("p4"));
-                        p5txt.setText(pattrenobj.getInt("p5"));
-                        p6txt.setText(pattrenobj.getInt("p6"));
-                        p7txt.setText(pattrenobj.getInt("p7"));
-                        p8txt.setText(pattrenobj.getInt("p8"));
-                        p9txt.setText(pattrenobj.getInt("p9"));
-                        p10txt.setText(pattrenobj.getInt("p10"));
-                        p11txt.setText(pattrenobj.getInt("p11"));
-                        p12txt.setText(pattrenobj.getInt("p12"));
+                        p1txt.setText(pattrenobj.getString("p1"));
+                        p4txt.setText(pattrenobj.getString("p2"));
+                        p3txt.setText(pattrenobj.getString("p3"));
+                        p4txt.setText(pattrenobj.getString("p4"));
+                        p5txt.setText(pattrenobj.getString("p5"));
+                        p6txt.setText(pattrenobj.getString("p6"));
+                        p7txt.setText(pattrenobj.getString("p7"));
+                        p8txt.setText(pattrenobj.getString("p8"));
+                        p9txt.setText(pattrenobj.getString("p9"));
+                        p10txt.setText(pattrenobj.getString("p10"));
+                        p11txt.setText(pattrenobj.getString("p11"));
+                        p12txt.setText(pattrenobj.getString("p12"));
 
                         JSONObject pattrennames = obj.getJSONObject("pattrennames");
                         np1txt.setText(pattrennames.getString("p1"));

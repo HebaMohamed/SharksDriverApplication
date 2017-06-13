@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.devspark.appmsg.AppMsg;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
@@ -72,6 +73,8 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
     Passenger passenger;
 
     int vid;
+
+    static long lastpattrenscount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +168,15 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
 
                 animateMarkerToGB(drivermarker,new LatLng(lat, lng));
                 getDirections(lat,lng);
+
+                //for pattrens detection
+                if(lastpattrenscount == 0)//init
+                    lastpattrenscount = dataSnapshot.child("Patterns detected").getChildrenCount();
+                else{
+                    if(dataSnapshot.child("Patterns detected").getChildrenCount() > lastpattrenscount){//there is a new pattren !
+                        AppMsg.makeText(InTripActivity.this, "New Pattren Detected!", AppMsg.STYLE_ALERT).show();
+                    }
+                }
             }
 
             @Override

@@ -3,6 +3,8 @@ package com.sharks.gp.sharkspassengerapplication;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,10 @@ public class HelpFemaleActivity extends AppCompatActivity  implements OnMapReady
 
     long fid;
 
+    Button dangerbtn, safebtn;
+
+    int driverid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +47,28 @@ public class HelpFemaleActivity extends AppCompatActivity  implements OnMapReady
         modeltxt = (TextView) findViewById(R.id.modeltxt);
         colortxt = (TextView) findViewById(R.id.colortxt);
 
-        int driverid = MyApplication.getLoggedDriverID();
+        dangerbtn = (Button) findViewById(R.id.dangerbtn);
+        safebtn = (Button) findViewById(R.id.safebtn);
+
+        driverid = MyApplication.getLoggedDriverID();
+
+        dangerbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyApplication.myFirebaseRef.child(AppConstants.FIRE_DRIVER).child(String.valueOf(driverid)).child("warninghelp").child("response").setValue("Danger");
+                Toast.makeText(HelpFemaleActivity.this, "Your response is changed to DANGER", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        safebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyApplication.myFirebaseRef.child(AppConstants.FIRE_DRIVER).child(String.valueOf(driverid)).child("warninghelp").child("response").setValue("Safe");
+                Toast.makeText(HelpFemaleActivity.this, "Your response is changed to SAFE", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         MyApplication.myFirebaseRef.child(AppConstants.FIRE_DRIVER).child(String.valueOf(driverid)).child("warninghelp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

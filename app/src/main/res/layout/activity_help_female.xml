@@ -110,4 +110,38 @@
 
     </LinearLayout>
 
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="1">
+        <Button
+            style="?android:textAppearanceSmall"
+            android:background="@drawable/buttonoval"
+            android:id="@+id/dangerbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.5"
+            android:text="Danger"
+            android:textColor="#fff"
+            android:padding="7dp"
+            android:textSize="17dp"
+            android:layout_centerHorizontal="true" />
+        <Button
+            style="?android:textAppearanceSmall"
+            android:background="@drawable/buttonoval2"
+            android:id="@+id/safebtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.5"
+            android:text="Safe"
+            android:textColor="#fff"
+            android:padding="7dp"
+            android:textSize="17dp"
+            android:layout_centerHorizontal="true" />
+    </LinearLayout>
+
 </RelativeLayout>
