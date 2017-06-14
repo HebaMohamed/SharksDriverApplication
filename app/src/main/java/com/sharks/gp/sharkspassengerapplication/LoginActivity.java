@@ -1,6 +1,8 @@
 package com.sharks.gp.sharkspassengerapplication;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,15 +64,41 @@ public class LoginActivity extends AppCompatActivity {
 //                        e.printStackTrace();
 //                    }
 
-                    int id = Integer.parseInt(driveridtxt.getText().toString());
-                    String pass = driverpasstxt.getText().toString();
-                    d = new Driver(id);
-                    d.password=pass;
-                    sendlogin();
+//                    int id = Integer.parseInt(driveridtxt.getText().toString());
+//                    String pass = driverpasstxt.getText().toString();
+//                    d = new Driver(id);
+//                    d.password=pass;
+//                    sendlogin();
+                    createAndShowAlertDialog();
                 }
             }
         });
 
+    }
+
+    private void createAndShowAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Make sure that you LOGGED IN before your vehicle powered ON !");
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+
+                int iid = Integer.parseInt(driveridtxt.getText().toString());
+                String pass = driverpasstxt.getText().toString();
+                d = new Driver(iid);
+                d.password=pass;
+                sendlogin();
+
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     boolean check() {

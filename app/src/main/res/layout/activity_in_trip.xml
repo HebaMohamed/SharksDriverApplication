@@ -66,6 +66,16 @@
         android:layout_marginBottom="-30dp"
         android:layout_marginEnd="60dp"/>
 
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/alertcircle"
+        android:src="@drawable/redcircle"
+        android:layout_above="@+id/linearlayout1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="105dp"
+        android:layout_marginBottom="15dp"/>
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

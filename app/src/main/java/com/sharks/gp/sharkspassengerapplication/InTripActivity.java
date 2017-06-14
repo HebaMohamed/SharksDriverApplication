@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,12 +70,14 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
     TextView addresstxt, disttxt, durationtxt;
     Button endbtn;
     CircleButton chatbtn, navbtn;
+    ImageView alertcircle;
     Trip trip;
     Passenger passenger;
 
     int vid;
 
     static long lastpattrenscount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,7 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         endbtn = (Button) findViewById(R.id.endbtn);
         chatbtn = (CircleButton)findViewById(R.id.chatbtn);
         navbtn = (CircleButton)findViewById(R.id.navbtn);
+        alertcircle = (ImageView)findViewById(R.id.alertcircle);
 
         driverid=MyApplication.getLoggedDriverID();
 
@@ -130,6 +134,22 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        //listen to talk notification
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_TRIPS).child(String.valueOf(trip.trip_ID)).child("talk").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                alertcircle.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
     }
 
     @Override
@@ -383,6 +403,15 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         // Add the request to the queue
         Volley.newRequestQueue(MyApplication.getAppContext()).add(sr);
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        alertcircle.setVisibility(View.INVISIBLE);
+    }
+
+
+
 
 
 
