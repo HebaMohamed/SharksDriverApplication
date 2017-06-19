@@ -183,8 +183,14 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                double lat = dataSnapshot.child("lat").getValue(Double.class);
-                double lng = dataSnapshot.child("lng").getValue(Double.class);
+                double lat = dataSnapshot.child("Latitude").getValue(Double.class);
+                double lng = dataSnapshot.child("Longitude").getValue(Double.class);
+
+                //add to pathway
+                long ts = System.currentTimeMillis();
+                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("pathway").child(String.valueOf(ts)).child("lat").setValue(lat);
+                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("pathway").child(String.valueOf(ts)).child("lng").setValue(lng);
+
 
                 animateMarkerToGB(drivermarker,new LatLng(lat, lng));
                 getDirections(lat,lng);

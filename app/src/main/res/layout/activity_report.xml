@@ -17,22 +17,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2">
+        android:weightSum="5">
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:id="@+id/userimg"
             android:paddingBottom="5dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:src="@drawable/usericn2"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/updownimg"
+            android:layout_gravity="center"
+            android:paddingBottom="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/arrowup"/>
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:id="@+id/avgimg"
             android:paddingBottom="5dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:src="@drawable/confused4"/>
     </LinearLayout>
 
@@ -41,9 +49,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="17sp"
         android:paddingBottom="5dp"
         android:textColor="@color/colorPrimaryDark"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Driver Name"/>
 
     <TextView

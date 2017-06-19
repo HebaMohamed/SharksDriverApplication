@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, TripRequestActivity.class));
                 } else if(appState.equals("ready")){
 //                    sendTestTrip();//test onlyyy
-                    sendMgrInstruction();//test onlyyy
+//                    sendMgrInstruction();//test onlyyy
                     startActivity(new Intent(MainActivity.this, MainMapActivity.class));
                 } else if(appState.equals("accept")){
                     startActivity(new Intent(MainActivity.this, ArrivingActivity.class));
@@ -91,31 +91,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void sendTestTrip(){
-
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put("type", "triprequest");
-            jso.put("lat", 30.123177);
-            jso.put("lng", 31.009540);
-            jso.put("details", "I'm over here a");
-            jso.put("tripid", 1);
-            jso.put("timestamp", System.currentTimeMillis());
-            MyApplication.sendNotification(jso);
-
-        } catch (JSONException e) { e.printStackTrace(); }
-    }
-    void sendMgrInstruction(){
-
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put("type", "managerinstruction");
-            jso.put("mgrmsg", "come on now");
-            jso.put("timestamp", System.currentTimeMillis());
-            MyApplication.sendNotification(jso);
-
-        } catch (JSONException e) { e.printStackTrace(); }
-    }
+//    void sendTestTrip(){
+//
+//        JSONObject jso = new JSONObject();
+//        try {
+//            jso.put("type", "triprequest");
+//            jso.put("lat", 30.123177);
+//            jso.put("lng", 31.009540);
+//            jso.put("details", "I'm over here a");
+//            jso.put("tripid", 1);
+//            jso.put("timestamp", System.currentTimeMillis());
+//            MyApplication.sendNotification(jso);
+//
+//        } catch (JSONException e) { e.printStackTrace(); }
+//    }
+//    void sendMgrInstruction(){
+//
+//        JSONObject jso = new JSONObject();
+//        try {
+//            jso.put("type", "managerinstruction");
+//            jso.put("mgrmsg", "come on now");
+//            jso.put("timestamp", System.currentTimeMillis());
+//            MyApplication.sendNotification(jso);
+//
+//        } catch (JSONException e) { e.printStackTrace(); }
+//    }
 
 
 

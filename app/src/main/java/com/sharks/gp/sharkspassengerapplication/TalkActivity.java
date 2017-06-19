@@ -240,7 +240,7 @@ public class TalkActivity extends AppCompatActivity {
     //fill lv
     void setadapter(final ArrayList<TalkMessage> a, ListView lv){
         lv.setAdapter(null);
-        adapter =new ArrayAdapter(TalkActivity.this, R.layout.passengertalklayout, android.R.id.text1, a)
+        adapter = new ArrayAdapter(TalkActivity.this, R.layout.passengertalklayout, android.R.id.text1, a)
         {
             public View getView(int position, View convertView, ViewGroup parent) {
 //                View view = super.getView(position, convertView, parent);
@@ -290,7 +290,6 @@ public class TalkActivity extends AppCompatActivity {
 //
 //        setadapter(msgs,talklv);
     }
-
 
     private String callUrlAndParseResult(String langFrom, String langTo, String word) throws Exception
     {

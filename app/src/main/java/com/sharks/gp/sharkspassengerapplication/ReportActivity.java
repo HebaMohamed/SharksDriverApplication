@@ -55,7 +55,7 @@ public class ReportActivity extends AppCompatActivity {
 
     BarChart mBarChart;
 
-    ImageView avgimg;
+    ImageView avgimg, updownimg;
     CircleImageView userimg;
     TextView ignoredcount, acceptedcount;
 
@@ -73,6 +73,7 @@ public class ReportActivity extends AppCompatActivity {
 
         userimg = (CircleImageView) findViewById(R.id.userimg);
         avgimg = (ImageView) findViewById(R.id.avgimg);
+        updownimg = (ImageView) findViewById(R.id.updownimg);
 
         ignoredcount = (TextView) findViewById(R.id.ignoredcount);
         acceptedcount = (TextView) findViewById(R.id.acceptedcount);
@@ -211,6 +212,15 @@ public class ReportActivity extends AppCompatActivity {
 
                         String avgtxts = obj.getString("avgtxt");
                         avgtxt.setText(obj.getString("avgtxt"));
+
+                        int avg = obj.getInt("avg");
+                        int lastavg = obj.getInt("lastavg");
+
+                        if(avg>lastavg)
+                            updownimg.setImageDrawable(getResources().getDrawable(R.drawable.arrowup));
+                        else
+                            updownimg.setImageDrawable(getResources().getDrawable(R.drawable.arrowdown));
+
 
                         acceptedcount.setText(String.valueOf(acceptedcountf));
                         ignoredcount.setText(String.valueOf(ignoredcountf));

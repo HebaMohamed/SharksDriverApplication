@@ -141,6 +141,25 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
         }
 
 
+        //listen & get initial value
+        MyApplication.myFirebaseRef.child(AppConstants.FIRE_TRIPS).child(String.valueOf(trip.trip_ID)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String status = dataSnapshot.child("status").getValue(String.class);
+                if(status.equals("canceled")){
+                    MyApplication.beReady();
+                    startActivity(new Intent(ArrivingActivity.this, MainMapActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
 
     }
 
@@ -181,8 +200,8 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                double lat = dataSnapshot.child("lat").getValue(Double.class);
-                double lng = dataSnapshot.child("lng").getValue(Double.class);
+                double lat = dataSnapshot.child("Latitude").getValue(Double.class);
+                double lng = dataSnapshot.child("Longitude").getValue(Double.class);
 
                 animateMarkerToGB(drivermarker,new LatLng(lat, lng));
             }

@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +56,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainMapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, LocationListener {
 
@@ -69,6 +75,7 @@ public class MainMapActivity extends AppCompatActivity
     ArrayList<Marker> markers = new ArrayList<>();
 
     TextView colortxt, modeltxt, numtxt;
+    ImageView onoffimg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,7 @@ public class MainMapActivity extends AppCompatActivity
         colortxt = (TextView) findViewById(R.id.colortxt);
         modeltxt = (TextView) findViewById(R.id.modeltxt);
         numtxt = (TextView) findViewById(R.id.numtxt);
+        onoffimg = (ImageView) findViewById(R.id.onoffimg);
 
         driverid=MyApplication.getLoggedDriverID();
         vehicleid=MyApplication.getLoggedDriverVehicleID();
@@ -103,6 +111,20 @@ public class MainMapActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        //add image and text
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.dfullnametxt);
+        CircleImageView dimg = (CircleImageView)hView.findViewById(R.id.dimg);
+        nav_user.setText(d.name);
+        if(d.image != "") {
+            byte[] decodedString = Base64.decode(d.image, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            dimg.setImageBitmap(decodedByte);
+        }else{
+            dimg.setImageDrawable(getResources().getDrawable(R.drawable.usericn2));
+        }
+
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -201,7 +223,7 @@ public class MainMapActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
         }
     }
 
@@ -270,12 +292,21 @@ public class MainMapActivity extends AppCompatActivity
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     try {
                         int vid = Integer.parseInt(postSnapshot.getKey());
-                        double lat = postSnapshot.child("lat").getValue(Double.class);
-                        double lng = postSnapshot.child("lng").getValue(Double.class);
+                        double lat = postSnapshot.child("Latitude").getValue(Double.class);
+                        double lng = postSnapshot.child("Longitude").getValue(Double.class);
+
+
 
                         ll = new LatLng(lat, lng);
 
                         if (vid == vehicleid) {
+                            //show vehicle on off
+                            int status = postSnapshot.child("status").getValue(int.class);
+                            if(status==1)
+                                onoffimg.setImageDrawable(getResources().getDrawable(R.drawable.poweron));
+                            else
+                                onoffimg.setImageDrawable(getResources().getDrawable(R.drawable.poweroff));
+
                             animateMarkerToGB(drivermarker, ll);
                         } else {
                             int f = 0;

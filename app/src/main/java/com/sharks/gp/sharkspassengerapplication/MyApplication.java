@@ -228,7 +228,7 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
 //        }
 //    }
 
-    public static void sendNotification(JSONObject jso) {
+//    public static void sendNotification(JSONObject jso) {
 //        PnGcmMessage gcmMessage = new PnGcmMessage();
 //        gcmMessage.setData(jso);
 //        PnMessage message = new PnMessage(
@@ -241,7 +241,7 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
 //        } catch (PubnubException e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
 //    public static void sendNotificationToChannel(JSONObject jso, String channel) {
 //        PnGcmMessage gcmMessage = new PnGcmMessage();
 //        gcmMessage.setData(jso);
