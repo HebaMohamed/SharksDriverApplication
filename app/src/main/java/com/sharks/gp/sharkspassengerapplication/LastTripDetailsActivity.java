@@ -140,7 +140,7 @@ public class LastTripDetailsActivity extends AppCompatActivity {
                         t.comment=new String(trip.getString("comment"));
                         t.rating = new Double(trip.getDouble("ratting"));
                         t.p = new Passenger(trip.getInt("passenger_id"));
-                        t.p.fullName = trip.getString("passenger_name");
+                        t.p.name = trip.getString("passenger_name");
 ////                        t.d =new Driver(trip.getInt("driver_id"));
 //                        t.destination.setLatitude(destinationobj.getDouble("lat"));
 //                        t.destination.setLongitude(destinationobj.getDouble("lng"));
@@ -173,14 +173,14 @@ public class LastTripDetailsActivity extends AppCompatActivity {
                             t.destination.setLongitude(destinationobj.getDouble("lng"));
                             t.pickup.setLatitude(pickupobj.getDouble("lat"));
                             t.pickup.setLongitude(pickupobj.getDouble("lng"));
-                            t.pickupAddress=MyApplication.getLocationAddress(t.destination);
+//                            t.pickupAddress=MyApplication.getLocationAddress(t.destination);
 
 
                         }
                         else
-                            t.pickupAddress="Not Moved";
+//                            t.pickupAddress="Not Moved";
 
-                        passengername.setText(t.p.fullName);
+                        passengername.setText(t.p.name);
                         pickuploctxt.setText(MyApplication.getLocationAddress(t.pickup));
                         dropoffloctxt.setText(MyApplication.getLocationAddress(t.destination));
                         starttxt.setText(t.getStartdate());

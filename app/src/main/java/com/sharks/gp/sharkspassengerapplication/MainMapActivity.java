@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +49,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.sharks.gp.sharkspassengerapplication.myclasses.AppConstants;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Driver;
 import com.sharks.gp.sharkspassengerapplication.myclasses.LatLngInterpolator;
@@ -55,6 +58,7 @@ import com.sharks.gp.sharkspassengerapplication.myclasses.LatLngInterpolator;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -284,6 +288,9 @@ public class MainMapActivity extends AppCompatActivity
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.smallorangeshark)));
 
 
+        addRestrictedRouted();
+
+
         //listen & get initial value
         MyApplication.myFirebaseRef.child(AppConstants.FIRE_VEHICLES).addValueEventListener(new ValueEventListener() {
             @Override
@@ -410,6 +417,31 @@ public class MainMapActivity extends AppCompatActivity
 //        } catch (PubnubException e) {
 //            System.out.println(e.toString());
 //        }
+    }
+
+
+    void addRestrictedRouted(){
+        //show restricted route
+        List<LatLng> list = new ArrayList<LatLng>();
+        for (int i = 0; i < d.restrictedLats.size(); i++) {
+            list.add(new LatLng(d.restrictedLats.get(i),d.restrictedLngs.get(i)));
+        }
+        if(list.size()!=0) {
+            Polyline line = mMap.addPolyline(new PolylineOptions()
+                    .addAll(list)
+                    .width(12)
+                    .color(Color.parseColor("#e74c3c"))
+                    .geodesic(true)
+            );
+            mMap.addMarker(new MarkerOptions()
+                    .position(list.get(0))
+                    .title("Restricted route start")
+                    .snippet(""));
+            mMap.addMarker(new MarkerOptions()
+                    .position(list.get(list.size()-1))
+                    .title("Restricted route end")
+                    .snippet(""));
+        }
     }
 
     private void createAndShowAlertDialog() {

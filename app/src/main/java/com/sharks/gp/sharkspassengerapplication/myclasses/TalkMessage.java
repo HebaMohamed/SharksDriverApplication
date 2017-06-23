@@ -5,7 +5,7 @@ package com.sharks.gp.sharkspassengerapplication.myclasses;
  */
 
 public class TalkMessage {
-    public String msgFlag;// p d
+    public String msgFlag;// p for passenger, d for driver
     public String msg;
 
     public TalkMessage(String msgFlag, String msg){

@@ -137,6 +137,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:weightSum="2"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
@@ -145,7 +146,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np1txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -154,7 +155,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p1txt"/>
             </LinearLayout>
             <LinearLayout
@@ -168,7 +169,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np2txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -177,7 +178,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p2txt"/>
             </LinearLayout>
             <LinearLayout
@@ -191,7 +192,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np3txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -200,7 +201,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p3txt"/>
             </LinearLayout>
             <LinearLayout
@@ -214,7 +215,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np4txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -223,7 +224,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p4txt"/>
             </LinearLayout>
             <LinearLayout
@@ -237,7 +238,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np5txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -246,7 +247,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p5txt"/>
             </LinearLayout>
             <LinearLayout
@@ -260,7 +261,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np6txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -269,7 +270,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p6txt"/>
             </LinearLayout>
             <LinearLayout
@@ -283,7 +284,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np7txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -292,7 +293,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p7txt"/>
             </LinearLayout>
             <LinearLayout
@@ -306,7 +307,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np8txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -315,7 +316,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p8txt"/>
             </LinearLayout>
             <LinearLayout
@@ -329,7 +330,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np9txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -338,7 +339,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p9txt"/>
             </LinearLayout>
             <LinearLayout
@@ -352,7 +353,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np10txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -361,7 +362,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p10txt"/>
             </LinearLayout>
             <LinearLayout
@@ -375,7 +376,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np11txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -384,7 +385,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p11txt"/>
             </LinearLayout>
             <LinearLayout
@@ -398,7 +399,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Pattren ..."
-                    android:gravity="center"
+                    android:gravity="left"
                     android:id="@+id/np12txt"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -407,7 +408,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="00"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:id="@+id/p12txt"/>
             </LinearLayout>
 

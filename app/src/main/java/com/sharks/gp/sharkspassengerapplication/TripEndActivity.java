@@ -144,7 +144,7 @@ public class TripEndActivity extends AppCompatActivity {
 
                         JSONObject pattrenobj = obj.getJSONObject("pattrenobj");
                         p1txt.setText(pattrenobj.getString("p1"));
-                        p4txt.setText(pattrenobj.getString("p2"));
+                        p2txt.setText(pattrenobj.getString("p2"));
                         p3txt.setText(pattrenobj.getString("p3"));
                         p4txt.setText(pattrenobj.getString("p4"));
                         p5txt.setText(pattrenobj.getString("p5"));

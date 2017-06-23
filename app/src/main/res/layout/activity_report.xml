@@ -48,6 +48,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/dnametxt"
         android:gravity="center"
         android:paddingBottom="5dp"
         android:textColor="@color/colorPrimaryDark"
@@ -85,13 +86,35 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/barchart"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:padding="10dp"
+        android:layout_height="100dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         app:egFixedBarWidth="true"
         app:egBarWidth="20dp"
         app:egLegendHeight="40dp"
         android:layout_weight="0.96" />
-
+        <org.eazegraph.lib.charts.BarChart
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/barchart2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            app:egFixedBarWidth="true"
+            app:egBarWidth="20dp"
+            app:egLegendHeight="40dp"
+            android:layout_weight="0.96" />
+        <org.eazegraph.lib.charts.BarChart
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/barchart3"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            app:egFixedBarWidth="true"
+            app:egBarWidth="20dp"
+            app:egLegendHeight="40dp"
+            android:layout_weight="0.96" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,51 +124,72 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
-                <TextView
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:paddingBottom="5dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_weight="1"
-                    android:text="Accepted Trips"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:paddingBottom="5dp"
-                    android:textColor="@color/colorAccent"
-                    android:layout_weight="1"
-                    android:text="Ignored Trips"/>
+                    android:orientation="vertical"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ignoredcount"
+                        android:gravity="center"
+                        android:textSize="17sp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/colorAccent"
+                        android:layout_weight="1"
+                        android:text="0"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/acceptedcount"
+                        android:gravity="center"
+                        android:textSize="17sp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_weight="1"
+                        android:text="0"/>
+                </LinearLayout>
+
+
+
+                <org.eazegraph.lib.charts.PieChart
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/piechart"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="8dp"
+                    android:layout_weight="1"/>
+
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:padding="5dp"
                 android:weightSum="2">
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/cash"
+                    android:padding="10dp"/>
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/acceptedcount"
-                    android:gravity="center"
+                    android:layout_height="match_parent"
+                    android:id="@+id/wallettxt"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:gravity="left|center_vertical"
                     android:textSize="17sp"
-                    android:paddingBottom="5dp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingLeft="17dp"
+                    android:textColor="@color/colorPrimary"
                     android:layout_weight="1"
-                    android:text="0"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ignoredcount"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:paddingBottom="5dp"
-                    android:textColor="@color/colorAccent"
-                    android:layout_weight="1"
-                    android:text="0"/>
+                    android:text="0$"/>
             </LinearLayout>
+
+
         </LinearLayout>
 
 

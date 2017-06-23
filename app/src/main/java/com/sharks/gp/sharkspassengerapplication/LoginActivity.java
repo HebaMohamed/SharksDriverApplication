@@ -23,6 +23,7 @@ import com.sharks.gp.sharkspassengerapplication.myclasses.Driver;
 import com.sharks.gp.sharkspassengerapplication.myclasses.MyURL;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Vehicle;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -145,6 +146,14 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject driver = obj.getJSONObject("driver");
                         String fullname = driver.getString("fullname");
                         String img = driver.getString("img");
+
+                        //get ristricted route
+                        JSONArray ristrictions = driver.getJSONArray("route");
+                        for (int i = 0; i < ristrictions.length(); i++) {
+                            d.restrictedLats.add(ristrictions.getJSONObject(i).getDouble("lat"));
+                            d.restrictedLngs.add(ristrictions.getJSONObject(i).getDouble("lng"));
+                        }
+
 //                        int vehicle_id = Integer.valueOf(driver.getString("vehicle_id"));
                         d.name = fullname;
                         d.image = img;

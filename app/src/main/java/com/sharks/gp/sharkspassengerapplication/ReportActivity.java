@@ -31,6 +31,7 @@ import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,11 +54,12 @@ public class ReportActivity extends AppCompatActivity {
 
     int p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12;
 
-    BarChart mBarChart;
+    BarChart mBarChart,mBarChart2,mBarChart3;
+    PieChart piechart;
 
     ImageView avgimg, updownimg;
     CircleImageView userimg;
-    TextView ignoredcount, acceptedcount;
+    TextView ignoredcount, acceptedcount, wallettxt,dnametxt;
 
     Driver d;
 
@@ -70,6 +72,10 @@ public class ReportActivity extends AppCompatActivity {
 
 
         mBarChart = (BarChart) findViewById(R.id.barchart);
+        mBarChart2 = (BarChart) findViewById(R.id.barchart2);
+        mBarChart3 = (BarChart) findViewById(R.id.barchart3);
+
+        piechart = (PieChart) findViewById(R.id.piechart);
 
         userimg = (CircleImageView) findViewById(R.id.userimg);
         avgimg = (ImageView) findViewById(R.id.avgimg);
@@ -77,9 +83,13 @@ public class ReportActivity extends AppCompatActivity {
 
         ignoredcount = (TextView) findViewById(R.id.ignoredcount);
         acceptedcount = (TextView) findViewById(R.id.acceptedcount);
+        wallettxt = (TextView) findViewById(R.id.wallettxt);
+        dnametxt = (TextView) findViewById(R.id.dnametxt);
 
 
         d = MyApplication.getLoggedDriver();
+
+        dnametxt.setText(d.name);
 
 
 //        mBarChart.addBar(new BarModel("SUN", 2.3f, 0xFF123456));
@@ -195,20 +205,25 @@ public class ReportActivity extends AppCompatActivity {
                             }
                         }
 
-                        mBarChart.addBar(new BarModel(obj.getString("p1_name"), (float)p1 , 0xFF123456));
-                        mBarChart.addBar(new BarModel(obj.getString("p2_name"),  (float)p2 ,  0xFF343456));
-                        mBarChart.addBar(new BarModel(obj.getString("p3_name"),  (float)p3 , 0xFF563456));
-                        mBarChart.addBar(new BarModel(obj.getString("p4_name"),  (float)p4 , 0xFF873F56));
-                        mBarChart.addBar(new BarModel(obj.getString("p5_name"),  (float)p5 , 0xFF56B7F1));
-                        mBarChart.addBar(new BarModel(obj.getString("p6_name"),  (float)p6 ,  0xFF343456));
-                        mBarChart.addBar(new BarModel(obj.getString("p7_name"),  (float)p7 ,  0xFF1BA4E6));
-                        mBarChart.addBar(new BarModel(obj.getString("p8_name"),  (float)p8 ,  0xFF343456));
-                        mBarChart.addBar(new BarModel(obj.getString("p9_name"),  (float)p9 , 0xFF563456));
-                        mBarChart.addBar(new BarModel(obj.getString("p10_name"), (float)p10 , 0xFF873F56));
-                        mBarChart.addBar(new BarModel(obj.getString("p11_name"), (float)p11 , 0xFF56B7F1));
-                        mBarChart.addBar(new BarModel(obj.getString("p12_name"), (float)p12 ,  0xFF343456));
+                        mBarChart.addBar(new BarModel(obj.getString("p1_name").replaceAll("\\s",""), (float)p1 , 0xFF123456));
+                        mBarChart.addBar(new BarModel(obj.getString("p2_name").replaceAll("\\s",""),  (float)p2 ,  0xFF343456));
+                        mBarChart.addBar(new BarModel(obj.getString("p3_name").replaceAll("\\s",""),  (float)p3 , 0xFF563456));
+                        mBarChart.addBar(new BarModel(obj.getString("p4_name").replaceAll("\\s",""),  (float)p4 , 0xFF873F56));
+                        mBarChart2.addBar(new BarModel(obj.getString("p5_name").replaceAll("\\s",""),  (float)p5 , 0xFF56B7F1));
+                        mBarChart2.addBar(new BarModel(obj.getString("p6_name").replaceAll("\\s",""),  (float)p6 ,  0xFF343456));
+                        mBarChart2.addBar(new BarModel(obj.getString("p7_name").replaceAll("\\s",""),  (float)p7 ,  0xFF1BA4E6));
+                        mBarChart2.addBar(new BarModel(obj.getString("p8_name").replaceAll("\\s",""),  (float)p8 ,  0xFF343456));
+                        mBarChart3.addBar(new BarModel(obj.getString("p9_name").replaceAll("\\s",""),  (float)p9 , 0xFF563456));
+                        mBarChart3.addBar(new BarModel(obj.getString("p10_name").replaceAll("\\s",""), (float)p10 , 0xFF873F56));
+                        mBarChart3.addBar(new BarModel(obj.getString("p11_name").replaceAll("\\s",""), (float)p11 , 0xFF56B7F1));
+                        mBarChart3.addBar(new BarModel(obj.getString("p12_name").replaceAll("\\s",""), (float)p12 ,  0xFF343456));
 
-                        mBarChart.setShowValues(true);
+                        //mBarChart.setShowValues(false);
+
+
+                        piechart.addPieSlice(new PieModel("Accepted", acceptedcountf, Color.parseColor("#2ecc71")));
+                        piechart.addPieSlice(new PieModel("Ignored", ignoredcountf, Color.parseColor("#e67e22")));
+
 
                         String avgtxts = obj.getString("avgtxt");
                         avgtxt.setText(obj.getString("avgtxt"));
@@ -216,14 +231,16 @@ public class ReportActivity extends AppCompatActivity {
                         int avg = obj.getInt("avg");
                         int lastavg = obj.getInt("lastavg");
 
-                        if(avg>lastavg)
+                        if(avg>=lastavg)
                             updownimg.setImageDrawable(getResources().getDrawable(R.drawable.arrowup));
                         else
                             updownimg.setImageDrawable(getResources().getDrawable(R.drawable.arrowdown));
 
+                        double wallet = obj.getDouble("wallet");
 
-                        acceptedcount.setText(String.valueOf(acceptedcountf));
-                        ignoredcount.setText(String.valueOf(ignoredcountf));
+                        wallettxt.setText(String.valueOf("Current Wallet : "+wallet+"$"));
+                        acceptedcount.setText(String.valueOf("Accepted Trips : "+acceptedcountf));
+                        ignoredcount.setText(String.valueOf("Ignored Trips : "+ignoredcountf));
 
                         if(avgtxts.equals("Excellent"))
                             avgimg.setImageDrawable(getResources().getDrawable(R.drawable.happy1));
@@ -239,6 +256,8 @@ public class ReportActivity extends AppCompatActivity {
                     }
                     progress.hide();
                     mBarChart.startAnimation();
+                    mBarChart2.startAnimation();
+                    piechart.startAnimation();
 
 
                 } catch (Exception e) {

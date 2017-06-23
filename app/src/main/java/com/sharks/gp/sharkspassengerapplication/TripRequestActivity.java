@@ -278,7 +278,7 @@ public class TripRequestActivity extends AppCompatActivity {
 //                        Passenger p =  new Passenger(1,"","Heba","Female",21,24684,248854,"English","h@h.h");
 //                        Passenger p =  new Passenger(t.p.id);
 
-                        trip.p.fullName=passenger.getString("fullname");
+                        trip.p.name=passenger.getString("fullname");
                         trip.p.phone=passenger.getInt("phone");
 
 

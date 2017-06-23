@@ -99,7 +99,7 @@ public class ArrivingActivity extends FragmentActivity implements OnMapReadyCall
             passenger = MyApplication.getTripPassenger();
             vid = MyApplication.getLoggedDriverVehicleID();
 
-            passengernametxt.setText(passenger.fullName);
+            passengernametxt.setText(passenger.name);
             addresstxt.setText(MyApplication.getLocationAddress(trip.pickup));
 
             callbtn.setOnClickListener(new View.OnClickListener() {

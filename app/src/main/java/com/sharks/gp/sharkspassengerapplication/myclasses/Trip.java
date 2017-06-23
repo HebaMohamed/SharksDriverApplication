@@ -2,9 +2,12 @@ package com.sharks.gp.sharkspassengerapplication.myclasses;
 
 import android.location.Location;
 
+import com.sharks.gp.sharkspassengerapplication.MyApplication;
+
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -30,9 +33,11 @@ public class Trip {
     public String details;
     public Long request_timestamp;//for request deletion
 
-    public String pickupAddress;
+    public ArrayList<TalkMessage> msgs = new ArrayList<TalkMessage>();
+    public ArrayList<Pattren> patterns = new ArrayList<Pattren>();
 
-    public String staticmapurl;
+//    public String pickupAddress;
+
 
     public Trip(int id)
     {

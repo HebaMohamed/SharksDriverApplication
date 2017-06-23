@@ -270,7 +270,7 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
 
 
     //////////////////////////////////////////////////////////////////////////////////loc
-    public static String getLocationAddress(Location loc) throws IOException {
+    public static String getLocationAddress(Location loc) {
         try{
             Geocoder geocoder;
             List<Address> addresses;
@@ -345,7 +345,7 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(AppConstants.PROPERTY_APP_STATE, "accept");
         editor.putString("pid", String.valueOf(p.id));
-        editor.putString("pname", p.fullName);
+        editor.putString("pname", p.name);
 //        editor.putString("pgender", p.gender);
 //        editor.putString("page", String.valueOf(p.age));
         editor.putString("pphone", String.valueOf(p.phone));
@@ -366,7 +366,7 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
 
 //        Passenger p = new Passenger(pid,"",pname,pgender,page,pphone,prelativephone,planguage,pemail);
         Passenger p = new Passenger(pid);
-        p.fullName=pname;
+        p.name=pname;
         p.phone=pphone;
         return p;
     }
@@ -414,6 +414,13 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
             editor.putString("vcolor", d.vehicle.Color);
             editor.putString("vmodel", d.vehicle.Model);
 
+            //store restricted lats lng
+            editor.putInt("restrictionscount",d.restrictedLats.size());
+            for (int i = 0; i < d.restrictedLats.size(); i++) {
+                editor.putString(String.valueOf("lat"+i),String.valueOf(d.restrictedLats.get(i)));
+                editor.putString(String.valueOf("lng"+i),String.valueOf(d.restrictedLngs.get(i)));
+            }
+
 
 //            editor.putString("demail", d.email);
 //            editor.putString("dimage", d.image);
@@ -428,6 +435,17 @@ public class MyApplication  extends android.support.multidex.MultiDexApplication
                 String dimage = prefs.getString("dimage", "");
 //                d = new Driver(did, dname, demail, "", dimage);
                 d = new Driver(did, dname, "", "", dimage);
+
+                //add route restrictions
+//                restrictionscount
+                int restrictionscount = prefs.getInt("restrictionscount", 0);
+                for (int i = 0; i < restrictionscount; i++) {
+                    double lat = Double.parseDouble(prefs.getString(String.valueOf("lat"+i), "0"));
+                    double lng = Double.parseDouble(prefs.getString(String.valueOf("lng"+i), "0"));
+                    d.restrictedLats.add(lat);
+                    d.restrictedLngs.add(lng);
+                }
+
 
                 String vnum = prefs.getString("vnum", "");
                 String vmodel = prefs.getString("vmodel", "");
