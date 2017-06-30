@@ -77,6 +77,7 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
     int vid;
 
     static long lastpattrenscount = 0;
+    int f = 0;
 
 
     @Override
@@ -141,7 +142,11 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
         MyApplication.myFirebaseRef.child(AppConstants.FIRE_TRIPS).child(String.valueOf(trip.trip_ID)).child("talk").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                alertcircle.setVisibility(View.VISIBLE);
+                if(f==0)
+                    f=1;//3shn yb2a mra w7da bs
+                else
+                    alertcircle.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -323,7 +328,7 @@ public class InTripActivity  extends FragmentActivity implements OnMapReadyCallb
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
 //                sendTripEnded("passenger"+passenger.id);
-                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("ended");
+//                MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("ended");
                 startActivity(new Intent(InTripActivity.this, TripEndActivity.class));
                 finish();
             }

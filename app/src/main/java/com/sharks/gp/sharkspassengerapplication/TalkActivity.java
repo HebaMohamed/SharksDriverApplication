@@ -144,10 +144,12 @@ public class TalkActivity extends AppCompatActivity {
                             //translate
                             try {
                                 String str;
-                                if (f.equals("p"))
-                                    str = callUrlAndParseResult("auto", languagesCodes.get(selectedIndex), msg);
-                                else
-                                    str = msg;
+//                                if (f.equals("p"))
+//                                    str = callUrlAndParseResult("auto", languagesCodes.get(selectedIndex), msg);
+//                                else
+//                                    str = msg;
+                                str = callUrlAndParseResult("auto", languagesCodes.get(selectedIndex), msg);//always translate
+
                                 msgs.add(new TalkMessage(f, str));
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -204,8 +206,10 @@ public class TalkActivity extends AppCompatActivity {
 
         languagesspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (position!=0)
+//                if (position!=0)
                     selectedIndex=position;//3shn l default
+                translateAll();
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -217,6 +221,22 @@ public class TalkActivity extends AppCompatActivity {
 
 
 
+    }
+
+    void translateAll(){
+        for (int i = 0; i < msgs.size(); i++) {
+            String translatedtxt = null;
+            TalkMessage tm = msgs.get(i);
+            try {
+                translatedtxt = callUrlAndParseResult("auto", languagesCodes.get(selectedIndex), msgs.get(i).msg);
+            } catch (Exception e) {
+                e.printStackTrace();
+                translatedtxt = msgs.get(i).msg;//same
+            }
+            tm.msg = translatedtxt;
+            msgs.set(i,tm);
+        }
+        setadapter(msgs,talklv);
     }
 
     //Receiving speech input
