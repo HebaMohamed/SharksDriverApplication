@@ -141,6 +141,7 @@ public class TripRequestActivity extends AppCompatActivity {
                             handler.removeMessages(0);
                         }
 
+
                     }
                 };
                 handler.postDelayed(runnable, 0); // Call it immediatly
@@ -260,23 +261,7 @@ public class TripRequestActivity extends AppCompatActivity {
 //                        JSONObject tripobj = obj.getJSONObject("tripobj");
                         JSONObject passenger = obj.getJSONObject("passenger");
 
-//                        MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("approved");
 
-
-//                        Trip t = new Trip(tripobj.getInt("tripid"));
-//                        t.start_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(tripobj.getString("start"));
-//                        t.end_Date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(tripobj.getString("end"));
-
-//                        t.price = new Double(tripobj.getDouble("price"));
-//                        t.comment = new String(tripobj.getString("comment"));
-//                        t.rating = new Double(tripobj.getDouble("ratting"));
-//                        t.p = new Passenger(tripobj.getInt("passenger_id"));
-//                        t.d = new Driver(tripobj.getInt("driver_id"));
-
-//                        sendTripAcceptance("passenger"+t.p.id);
-
-//                        Passenger p =  new Passenger(1,"","Heba","Female",21,24684,248854,"English","h@h.h");
-//                        Passenger p =  new Passenger(t.p.id);
 
                         trip.p.name=passenger.getString("fullname");
                         trip.p.phone=passenger.getInt("phone");

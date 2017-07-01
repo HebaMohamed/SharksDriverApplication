@@ -83,12 +83,16 @@ public class LoginActivity extends AppCompatActivity {
         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-
-                int iid = Integer.parseInt(driveridtxt.getText().toString());
-                String pass = driverpasstxt.getText().toString();
-                d = new Driver(iid);
-                d.password=pass;
-                sendlogin();
+        try {
+            int iid = Integer.parseInt(driveridtxt.getText().toString());
+            String pass = driverpasstxt.getText().toString();
+            d = new Driver(iid);
+            d.password = pass;
+            sendlogin();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
                 dialog.dismiss();
             }

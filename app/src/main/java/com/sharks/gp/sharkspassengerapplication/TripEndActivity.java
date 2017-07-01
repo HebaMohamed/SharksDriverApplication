@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sharks.gp.sharkspassengerapplication.myclasses.Driver;
 import com.sharks.gp.sharkspassengerapplication.myclasses.MyURL;
 import com.sharks.gp.sharkspassengerapplication.myclasses.Trip;
 
@@ -33,6 +34,7 @@ public class TripEndActivity extends AppCompatActivity {
     public static double distance;
     public static double distancecost;
     public static double durationcost;
+    double lastwallet;
 
 
 //    TextView costtxt, stxt, dtxt, distancetxt, distancecosttxt, durationtxt, durationcosttxt;
@@ -47,8 +49,7 @@ public class TripEndActivity extends AppCompatActivity {
 
     Trip trip;
     int vehicleid;
-
-
+    Driver d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class TripEndActivity extends AppCompatActivity {
         try {
             trip=MyApplication.getTripRequest();
             vehicleid=MyApplication.getLoggedDriverVehicleID();
+            d=MyApplication.getLoggedDriver();
             stxt.setText(MyApplication.getLocationAddress(trip.pickup));
             dtxt.setText(MyApplication.getLocationAddress(trip.destination));
         } catch (Exception e) {
@@ -117,6 +119,8 @@ public class TripEndActivity extends AppCompatActivity {
             public void onClick(View view) {
                 MyApplication.beReady();
                 MyApplication.myFirebaseRef.child("trips").child(String.valueOf(trip.trip_ID)).child("status").setValue("ended");
+                MyApplication.myFirebaseRef.child("driver").child(String.valueOf(d.id)).child("wallet").setValue(lastwallet);
+
                 startActivity(new Intent(TripEndActivity.this, MainMapActivity.class));
                 finish();
             }
@@ -149,6 +153,7 @@ public class TripEndActivity extends AppCompatActivity {
                     if (success == 1) {
                         distance = obj.getDouble("distance");
                         distancecost = obj.getDouble("distancecost");
+                        lastwallet = obj.getDouble("lastwallet");
 
                         JSONObject pattrenobj = obj.getJSONObject("pattrenobj");
                         p1txt.setText(pattrenobj.getString("p1"));
@@ -196,6 +201,8 @@ public class TripEndActivity extends AppCompatActivity {
 //                        distancecosttxt.setText(Double.toString(distancecost)+"$");
                         kmtxt.setText(Double.toString(distance)+"Km");
                         costtxt.setText(distancecost+"$");
+
+                        lastwallet+=distancecost;
 
 //                        durationcost=0;//testtt;
 //                        tripcost=durationcost+distancecost;
